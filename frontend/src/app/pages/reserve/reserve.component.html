@@ -1,0 +1,41 @@
+<div class="glass-card" style="max-width: 600px; margin: 0 auto;">
+  <h2>Nouvelle Réservation</h2>
+  
+  <div *ngIf="errorMessage" style="background: rgba(239,68,68,0.2); color: #ef4444; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+    {{ errorMessage }}
+  </div>
+  
+  <div *ngIf="successMessage" style="background: rgba(16,185,129,0.2); color: #10b981; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+    {{ successMessage }}
+  </div>
+
+  <form (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label>Date et heure de début</label>
+      <input type="datetime-local" class="glass-input" [(ngModel)]="reservation.startTime" name="startTime" required>
+    </div>
+
+    <div class="form-group">
+      <label>Date et heure de fin</label>
+      <input type="datetime-local" class="glass-input" [(ngModel)]="reservation.endTime" name="endTime" required>
+    </div>
+
+    <div class="form-group">
+      <label>Choisir une salle (facultatif si réservation de matériel)</label>
+      <select class="glass-input" [(ngModel)]="selectedRoomId" name="roomId">
+        <option value="">-- Aucune salle --</option>
+        <option *ngFor="let r of rooms" [value]="r.id">{{ r.name }} (Capacité: {{r.capacity}})</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Choisir un équipement (facultatif si réservation de salle)</label>
+      <select class="glass-input" [(ngModel)]="selectedEquipmentId" name="eqId">
+        <option value="">-- Aucun équipement --</option>
+        <option *ngFor="let eq of equipments" [value]="eq.id">{{ eq.name }}</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Confirmer la réservation</button>
+  </form>
+</div>

@@ -1,0 +1,95 @@
+<div class="glass-card">
+  <h2>Gestion des Équipements du Pôle</h2>
+
+  <div *ngIf="message" style="padding: 1rem; border-radius: 8px; margin: 1rem 0; font-weight: bold;"
+       [ngStyle]="{'background': message.includes('Impossible') || message.includes('Erreur') ? 'rgba(239,68,68,0.2)' : 'rgba(16,185,129,0.2)', 
+                  'color': message.includes('Impossible') || message.includes('Erreur') ? 'var(--error)' : 'var(--success)'}">
+    {{ message }}
+  </div>
+
+  <!-- Formulaire de Création/Édition -->
+  <div style="background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+    <h3 style="margin-bottom: 1rem;">{{ isEditing ? 'Modifier Matériel' : 'Ajouter un Nouveau Matériel' }}</h3>
+    <form (ngSubmit)="saveEquipment()" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end;">
+      
+      <div class="form-group" style="flex: 1; min-width: 200px;">
+        <label>Nom du Matériel</label>
+        <input type="text" class="glass-input" [(ngModel)]="eqForm.name" name="name" required>
+      </div>
+
+      <div class="form-group" style="flex: 1; min-width: 150px;">
+        <label>Type (ex: Informatique)</label>
+        <input type="text" class="glass-input" [(ngModel)]="eqForm.type" name="type">
+      </div>
+
+      <div class="form-group" style="flex: 1; min-width: 150px;">
+        <label>Référence Interne</label>
+        <input type="text" class="glass-input" [(ngModel)]="eqForm.reference" name="reference">
+      </div>
+
+      <!-- Le Toggle Sensible -->
+      <div class="form-group" style="flex: 1; min-width: 150px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center;">
+        <label style="color: var(--error); font-weight: bold;">Matériel Sensible ?</label>
+        <div style="display:flex; align-items:center; gap:0.5rem; margin-top:0.5rem;">
+          <input type="checkbox" [(ngModel)]="eqForm.sensitive" name="sensitive" style="width: 20px; height: 20px; cursor:pointer;">
+          <span style="font-size: 0.85rem; color:var(--text-muted)">Requiert approbation</span>
+        </div>
+      </div>
+
+      <div class="form-group" style="flex: 1; min-width: 150px;">
+        <label>Statut</label>
+        <select class="glass-input" [(ngModel)]="eqForm.status" name="status">
+          <option value="AVAILABLE">Disponible</option>
+          <option value="MAINTENANCE">En Maintenance</option>
+          <option value="UNAVAILABLE">Indisponible</option>
+        </select>
+      </div>
+
+      <div style="flex: 1; min-width: 200px; display: flex; gap: 0.5rem; margin-bottom: 1.5rem;">
+        <button type="submit" class="btn btn-primary" style="flex: 1;">{{ isEditing ? 'Mettre à jour' : 'Enregistrer' }}</button>
+        <button type="button" class="btn" style="background: rgba(255,255,255,0.1); color: white;" *ngIf="isEditing" (click)="resetForm()">Annuler</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Tableau des Équipements -->
+  <table style="width: 100%; border-collapse: collapse; text-align: left;">
+    <thead>
+      <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+        <th style="padding: 1rem;">ID</th>
+        <th style="padding: 1rem;">Libellé</th>
+        <th style="padding: 1rem;">Réf & Type</th>
+        <th style="padding: 1rem;">Sensibilité</th>
+        <th style="padding: 1rem;">Statut</th>
+        <th style="padding: 1rem;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngIf="equipments.length === 0">
+        <td colspan="6" style="padding: 2rem; text-align: center; color: var(--text-muted);">
+          Aucun équipement enregistré dans le système.
+        </td>
+      </tr>
+      <tr *ngFor="let eq of equipments" style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+        <td style="padding: 1rem; color: var(--text-muted);">#{{ eq.id }}</td>
+        <td style="padding: 1rem; font-weight: bold; color: var(--text-light);">{{ eq.name }}</td>
+        <td style="padding: 1rem; font-size: 0.9rem;">Type: {{ eq.type }} <br>Réf: {{ eq.reference }}</td>
+        <td style="padding: 1rem;">
+          <span *ngIf="eq.sensitive" style="color: var(--error); font-weight: bold;">🔴 Sensible</span>
+          <span *ngIf="!eq.sensitive" style="color: var(--text-muted);">Standard</span>
+        </td>
+        <td style="padding: 1rem;">
+          <span class="badge" [ngClass]="{
+            'badge-available': eq.status === 'AVAILABLE',
+            'badge-maintenance': eq.status === 'MAINTENANCE',
+            'badge-unavailable': eq.status === 'UNAVAILABLE'
+          }">{{ eq.status }}</span>
+        </td>
+        <td style="padding: 1rem; display: flex; gap: 0.5rem;">
+          <button class="btn btn-primary" style="padding: 0.25rem 0.75rem; font-size: 0.8rem;" (click)="editEquipment(eq)">Éditer</button>
+          <button class="btn btn-danger" style="padding: 0.25rem 0.75rem; font-size: 0.8rem;" (click)="deleteEquipment(eq.id)">Suppr</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

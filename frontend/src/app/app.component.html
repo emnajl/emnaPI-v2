@@ -1,0 +1,40 @@
+<div class="app-container">
+  <nav class="glass-navbar">
+    <div class="logo">
+      <span class="logo-icon">🚀</span>
+      <span class="logo-text">StudentHub Dashboard</span>
+    </div>
+    
+    <!-- Menu Étudiant -->
+    <ul class="nav-links" *ngIf="!isAdminMode">
+      <li style="color: #cbd5e1; align-self: center; font-size: 0.9rem; font-style: italic; margin-right: 20px;">Vue Étudiant</li>
+      <li><a routerLink="/resources" routerLinkActive="active">Ressources & Salles</a></li>
+      <li><a routerLink="/reserve" routerLinkActive="active">Réserver</a></li>
+      <li><a routerLink="/my-reservations" routerLinkActive="active">Mes Réservations</a></li>
+    </ul>
+
+    <!-- Menu Administration -->
+    <ul class="nav-links" *ngIf="isAdminMode">
+      <li style="color: #f59e0b; align-self: center; font-size: 0.9rem; font-weight: bold; margin-right: 20px;">Mode Administration</li>
+      <li><a routerLink="/admin/dashboard" routerLinkActive="active"> Tableau de bord</a></li>
+      <li><a routerLink="/admin/rooms" routerLinkActive="active">Salles</a></li>
+      <li><a routerLink="/admin/equipments" routerLinkActive="active">Équipements</a></li>
+      <li><a routerLink="/admin/reservations" routerLinkActive="active">Validation</a></li>
+    </ul>
+
+    <div class="user-profile" style="display: flex; gap: 1rem; align-items: center;">
+      <!-- Bouton de connexion Simulé -->
+      <button class="btn" 
+              [ngClass]="isAdminMode ? 'btn-danger' : 'btn-primary'" 
+              style="padding: 0.3rem 0.8rem; font-size: 0.8rem;"
+              (click)="toggleMode()">
+        {{ isAdminMode ? 'Passer en Mode Étudiant' : 'Accès Administrateur' }}
+      </button>
+      <div class="avatar">{{ isAdminMode ? 'A' : 'E' }}</div>
+    </div>
+  </nav>
+
+  <main class="content-area">
+    <router-outlet></router-outlet>
+  </main>
+</div>

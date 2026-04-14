@@ -1,0 +1,50 @@
+<div class="glass-card">
+  <h2>Administration : Pôle Validation</h2>
+  
+  <div style="display: flex; align-items: center; gap: 1rem; margin-top: 1rem;">
+    <label>Simuler la validation en tant que : </label>
+    <input type="text" class="glass-input" style="width: auto;" [(ngModel)]="adminId" />
+  </div>
+
+  <div *ngIf="errorMessage" style="background: rgba(239,68,68,0.2); color: #ef4444; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; margin-top: 1rem;">
+    {{ errorMessage }}
+  </div>
+
+  <div style="margin-top: 1.5rem;">
+    <div *ngIf="pendingReservations.length === 0" style="color: var(--text-muted); text-align: center; padding: 2rem;">
+      Aucune réservation en attente de validation. Le système a géré automatiquement le reste !
+    </div>
+
+    <table style="width: 100%; border-collapse: collapse; text-align: left;" *ngIf="pendingReservations.length > 0">
+      <thead>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+          <th style="padding: 1rem;">Étudiant</th>
+          <th style="padding: 1rem;">Ressources Demandées</th>
+          <th style="padding: 1rem;">Plage horaire</th>
+          <th style="padding: 1rem;">Actions de Validation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let res of pendingReservations" style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+          <td style="padding: 1rem; font-weight: bold; color: var(--primary-color);">{{ res.userId }}</td>
+          <td style="padding: 1rem;">
+            <div *ngIf="res.room"> {{ res.room.name }} <span style="font-size:0.8rem; color:var(--warning)" *ngIf="res.room.capacity >= 20">(Grande)</span></div>
+            <div *ngIf="res.equipments?.length > 0">
+              <span *ngFor="let eq of res.equipments">
+                 {{ eq.name }} <span style="font-size:0.8rem; color:var(--error)" *ngIf="eq.sensitive">(Sensible)</span>
+              </span>
+            </div>
+          </td>
+          <td style="padding: 1rem;">
+            Du {{ res.startTime | date:'short' }} <br>Au {{ res.endTime | date:'short' }}
+          </td>
+          <td style="padding: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button class="btn btn-success" style="padding: 0.35rem 0.85rem; font-size: 0.85rem; font-weight: bold;" (click)="validate(res.id, 'APPROVED')">Approuver</button>
+            <button class="btn btn-danger" style="padding: 0.35rem 0.85rem; font-size: 0.85rem; font-weight: bold;" (click)="validate(res.id, 'REJECTED')">Refuser</button>
+            <button class="btn" style="background:#f59e0b; color:white; padding: 0.35rem 0.85rem; font-size: 0.85rem; font-weight: bold;" (click)="validate(res.id, 'MODIFICATION_REQUESTED')">Demander Modification</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
