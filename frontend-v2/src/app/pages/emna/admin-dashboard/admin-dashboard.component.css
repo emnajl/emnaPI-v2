@@ -1,0 +1,89 @@
+.dashboard-hero {
+  background:
+    radial-gradient(circle at top right, rgba(37, 99, 235, 0.12), transparent 28%),
+    radial-gradient(circle at left bottom, rgba(16, 185, 129, 0.1), transparent 26%),
+    #fff;
+}
+
+.dashboard-hero__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.dashboard-kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 12px;
+  font-weight: 700;
+  color: #2563eb;
+}
+
+.period-switch {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.period-switch__active {
+  background: #2563eb;
+  color: #fff;
+  border-color: #2563eb;
+}
+
+.period-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.stat-card {
+  border: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+.stat-card__label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.stat-card__value {
+  font-size: 30px;
+  font-weight: 700;
+  margin: 12px 0 6px;
+}
+
+.stat-card--primary {
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.stat-card--success {
+  background: rgba(16, 185, 129, 0.08);
+}
+
+.stat-card--warning {
+  background: rgba(245, 158, 11, 0.09);
+}
+
+.stat-card--info {
+  background: rgba(14, 165, 233, 0.08);
+}
+
+.chart-card {
+  border: 1px solid rgba(148, 163, 184, 0.14);
+}
+
+.chart-card__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}

@@ -1,0 +1,149 @@
+.hero-card {
+  background:
+    radial-gradient(circle at top right, rgba(239, 68, 68, 0.1), transparent 26%),
+    radial-gradient(circle at left bottom, rgba(14, 165, 233, 0.1), transparent 24%),
+    #fff;
+}
+
+.hero-head,
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.hero-kicker,
+.section-kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 12px;
+  font-weight: 700;
+  color: #ea580c;
+}
+
+.mini-stat,
+.section-card {
+  border: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+.mini-stat__label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.mini-stat__value {
+  font-size: 28px;
+  font-weight: 700;
+  margin-top: 12px;
+}
+
+.mini-stat--primary {
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.mini-stat--success {
+  background: rgba(16, 185, 129, 0.08);
+}
+
+.mini-stat--warning {
+  background: rgba(245, 158, 11, 0.09);
+}
+
+.mini-stat--danger {
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.toggle-col {
+  display: flex;
+  align-items: stretch;
+}
+
+.toggle-box {
+  width: 100%;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  background: #fffaf7;
+}
+
+.toggle-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #dc2626;
+}
+
+.toggle-help {
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+.action-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.primary-action {
+  flex: 1;
+}
+
+.admin-table th {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.status-badge,
+.sensibility-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.status-badge--success {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.status-badge--warning {
+  background: #fffbeb;
+  color: #d97706;
+}
+
+.status-badge--danger {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.sensibility-badge--danger {
+  background: #fff1f2;
+  color: #e11d48;
+}
+
+.sensibility-badge--muted {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+@media (max-width: 768px) {
+  .primary-action {
+    width: 100%;
+  }
+
+  .toggle-box {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

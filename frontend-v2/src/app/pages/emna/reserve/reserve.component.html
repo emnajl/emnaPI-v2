@@ -1,0 +1,231 @@
+<div class="row reserve-layout">
+  <div class="col-12 col-xl-8 m-b-24">
+    <mat-card class="cardWithShadow theme-card booking-card">
+      <mat-card-header class="booking-card__header">
+        <div class="booking-header-block">
+          <p class="booking-kicker m-0">Réservation intelligente</p>
+          <mat-card-title class="m-b-0 f-s-20 f-w-600 d-flex align-items-center m-t-8">
+            <i-tabler name="calendar-plus" class="icon-24 m-r-8 text-primary"></i-tabler>
+            Assistant de réservation
+          </mat-card-title>
+          <p class="text-muted m-0 m-t-8">Même design que les autres modules, avec décision métier et lecture horaire claire pour l’utilisateur.</p>
+        </div>
+      </mat-card-header>
+
+      <mat-card-content class="p-24">
+        <div *ngIf="errorMessage" class="m-b-16 p-16 border-radius-8 f-w-500 bg-light-error text-error d-flex align-items-center">
+          <i-tabler name="alert-circle" class="icon-20 m-r-8"></i-tabler>
+          {{ errorMessage }}
+        </div>
+
+        <div *ngIf="successMessage" class="m-b-16 p-16 border-radius-8 f-w-500 bg-light-success text-success d-flex align-items-center">
+          <i-tabler name="check" class="icon-20 m-r-8"></i-tabler>
+          {{ successMessage }}
+        </div>
+
+        <form (ngSubmit)="onSubmit()">
+          <div class="quick-presets m-b-24">
+            <span class="text-muted f-w-600">Durée rapide :</span>
+            <button mat-stroked-button type="button" (click)="applyPreset(1)">1h</button>
+            <button mat-stroked-button type="button" (click)="applyPreset(2)">2h</button>
+            <button mat-stroked-button type="button" (click)="applyPreset(4)">4h</button>
+          </div>
+
+          <div class="row">
+            <div class="col-12 col-md-6 m-b-16">
+              <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-8 d-block">Début</mat-label>
+              <div class="datetime-row">
+                <mat-form-field appearance="outline" class="flex-1">
+                  <mat-label>Date</mat-label>
+                  <input matInput [matDatepicker]="pickerStart" [(ngModel)]="formDateStart" name="dateStart" (ngModelChange)="onPlanningChange()" required>
+                  <mat-datepicker-toggle matIconSuffix [for]="pickerStart"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerStart></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="time-field">
+                  <mat-label>Heure</mat-label>
+                  <input matInput type="time" [(ngModel)]="formTimeStart" name="timeStart" (ngModelChange)="onPlanningChange()" required>
+                  <mat-hint>{{ startPeriodLabel }}</mat-hint>
+                </mat-form-field>
+              </div>
+              <div class="time-clarity" *ngIf="formTimeStart">
+                Affichage utilisateur : <strong>{{ startTime12h }}</strong>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-6 m-b-16">
+              <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-8 d-block">Fin</mat-label>
+              <div class="datetime-row">
+                <mat-form-field appearance="outline" class="flex-1">
+                  <mat-label>Date</mat-label>
+                  <input matInput [matDatepicker]="pickerEnd" [(ngModel)]="formDateEnd" name="dateEnd" (ngModelChange)="onPlanningChange()" required>
+                  <mat-datepicker-toggle matIconSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerEnd></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="time-field">
+                  <mat-label>Heure</mat-label>
+                  <input matInput type="time" [(ngModel)]="formTimeEnd" name="timeEnd" (ngModelChange)="onPlanningChange()" required>
+                  <mat-hint>{{ endPeriodLabel }}</mat-hint>
+                </mat-form-field>
+              </div>
+              <div class="time-clarity" *ngIf="formTimeEnd">
+                Affichage utilisateur : <strong>{{ endTime12h }}</strong>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-6 m-b-16">
+              <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-8 d-block">Salle</mat-label>
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-select [(ngModel)]="selectedRoomId" name="roomId" (ngModelChange)="onPlanningChange()">
+                  <mat-option value="">Aucune salle</mat-option>
+                  <mat-option *ngFor="let room of rooms" [value]="room.id">
+                    {{ room.name }} - {{ room.capacity }} places
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="col-12 col-md-6 m-b-16">
+              <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-8 d-block">Équipement</mat-label>
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-select [(ngModel)]="selectedEquipmentId" name="eqId" (ngModelChange)="onPlanningChange()">
+                  <mat-option value="">Aucun équipement</mat-option>
+                  <mat-option *ngFor="let eq of equipments" [value]="eq.id">
+                    {{ eq.name }}<span *ngIf="eq.sensitive"> - sensible</span>
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="booking-warning m-b-24" *ngIf="requiresAdminApproval">
+            <i-tabler name="shield-exclamation" class="icon-20 m-r-8"></i-tabler>
+            Cette réservation nécessite une validation admin selon les règles métier.
+          </div>
+
+          <div class="booking-warning booking-warning--danger m-b-24" *ngIf="hasBlockingDecision">
+            <i-tabler name="calendar-x" class="icon-20 m-r-8"></i-tabler>
+            Cette demande est bloquée par le moteur de règles.
+          </div>
+
+          <div class="booking-warning booking-warning--danger m-b-24" *ngIf="matchingReservations.length > 0">
+            <i-tabler name="clock-x" class="icon-20 m-r-8"></i-tabler>
+            Ce créneau chevauche déjà {{ matchingReservations.length }} réservation(s) existante(s) avec temps tampon.
+          </div>
+
+          <button
+            mat-flat-button
+            color="primary"
+            class="w-100 p-y-24 f-s-16 shadow-none"
+            type="submit"
+            [disabled]="previewLoading || hasBlockingDecision">
+            <i-tabler name="circle-check" class="icon-20 m-r-8"></i-tabler>
+            Confirmer la réservation
+          </button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="col-12 col-xl-4">
+    <div class="row m-b-24">
+      <div class="col-sm-6 col-xl-12 m-b-16">
+        <mat-card class="cardWithShadow mini-stat mini-stat--primary">
+          <mat-card-content class="p-16">
+            <div class="mini-stat__label">Décision</div>
+            <div class="mini-stat__value-small" [class]="decisionClass">{{ decisionLabel }}</div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div class="col-sm-6 col-xl-12 m-b-16">
+        <mat-card class="cardWithShadow mini-stat mini-stat--info">
+          <mat-card-content class="p-16">
+            <div class="mini-stat__label">Lecture horaire</div>
+            <div class="mini-stat__text">{{ startTime12h }} -> {{ endTime12h }}</div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <mat-card class="cardWithShadow theme-card side-card m-b-24">
+      <mat-card-header>
+        <mat-card-title class="m-b-0 f-s-18">Résumé intelligent</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="p-24">
+        <div class="summary-line">
+          <span>Durée estimée</span>
+          <strong>{{ durationText }}</strong>
+        </div>
+        <div class="summary-line">
+          <span>Salle</span>
+          <strong>{{ selectedRoom?.name || 'Non choisie' }}</strong>
+        </div>
+        <div class="summary-line">
+          <span>Équipement</span>
+          <strong>{{ selectedEquipment?.name || 'Non choisi' }}</strong>
+        </div>
+        <div class="summary-line">
+          <span>Décision</span>
+          <strong [class]="decisionClass">{{ decisionLabel }}</strong>
+        </div>
+        <div class="summary-line">
+          <span>Temps tampon</span>
+          <strong>30 min avant / 30 min après</strong>
+        </div>
+        <div class="summary-line">
+          <span>Format clair</span>
+          <strong>{{ startPeriodLabel }} / {{ endPeriodLabel }}</strong>
+        </div>
+        <div class="summary-line">
+          <span>Durée longue</span>
+          <strong>Validation si > 4h</strong>
+        </div>
+
+        <div class="rules-box m-t-20" *ngIf="reservationPreview?.validationReasons?.length">
+          <div class="rules-box__title">Validation requise</div>
+          <ul class="rules-list">
+            <li *ngFor="let reason of reservationPreview.validationReasons">{{ reason }}</li>
+          </ul>
+        </div>
+
+        <div class="rules-box rules-box--danger m-t-20" *ngIf="reservationPreview?.blockingReasons?.length">
+          <div class="rules-box__title">Blocages</div>
+          <ul class="rules-list">
+            <li *ngFor="let reason of reservationPreview.blockingReasons">{{ reason }}</li>
+          </ul>
+        </div>
+
+        <div class="rules-box rules-box--info m-t-20" *ngIf="reservationPreview?.informationNotes?.length">
+          <div class="rules-box__title">Notes métier</div>
+          <ul class="rules-list">
+            <li *ngFor="let note of reservationPreview.informationNotes">{{ note }}</li>
+          </ul>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="cardWithShadow theme-card side-card">
+      <mat-card-header>
+        <mat-card-title class="m-b-0 f-s-18">Créneaux suggérés</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="p-24">
+        <div *ngIf="suggestedSlots.length === 0" class="text-muted">
+          Choisis une ressource pour voir les premiers créneaux sans conflit.
+        </div>
+
+        <div class="slot-list" *ngIf="suggestedSlots.length > 0">
+          <button
+            mat-stroked-button
+            type="button"
+            class="slot-button"
+            *ngFor="let slot of suggestedSlots"
+            (click)="applySuggestedSlot(slot)">
+            <span class="f-w-600">{{ slot.label }}</span>
+            <span>{{ slot.start | date:'dd/MM HH:mm' }} - {{ slot.end | date:'HH:mm' }}</span>
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

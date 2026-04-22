@@ -1,6 +1,10 @@
 C:\Users\ASUS\Documents\emnaPI\src\main\java\com\example\reservation\Entities\Enums\ReservationStatus.java
+C:\Users\ASUS\Documents\emnaPI\src\main\java\com\example\reservation\Dto\ReservationRuleDecisionResponse.java
 C:\Users\ASUS\Documents\emnaPI\src\main\java\com\example\reservation\Repository\ReservationRepository.java
+C:\Users\ASUS\Documents\emnaPI\src\main\java\com\example\reservation\Dto\ReservationRulePreviewRequest.java
 C:\Users\ASUS\Documents\emnaPI\src\main\java\com\example\reservation\Entities\Enums\ResourceStatus.java
+C:\Users\ASUS\Documents\emnaPI\src\main\java\com\example\reservation\Repository\ReservationBlockPeriodRepository.java
+C:\Users\ASUS\Documents\emnaPI\src\main\java\com\example\reservation\Services\ReservationBlockPeriodService.java
 C:\Users\ASUS\Documents\emnaPI\src\main\java\com\example\reservation\Repository\RoomRepository.java
 C:\Users\ASUS\Documents\emnaPI\src\main\java\com\example\reservation\ReservationApplication.java
 C:\Users\ASUS\Documents\emnaPI\src\main\java\com\example\reservation\Repository\EquipmentRepository.java
@@ -9,7 +13,10 @@ C:\Users\ASUS\Documents\emnaPI\src\main\java\com\example\reservation\Controller\
 C:\Users\ASUS\Documents\emnaPI\src\main\java\com\example\reservation\Controller\ReservationController.java
 C:\Users\ASUS\Documents\emnaPI\src\main\java\com\example\reservation\Services\EquipmentService.java
 C:\Users\ASUS\Documents\emnaPI\src\main\java\com\example\reservation\Entities\Reservation.java
+C:\Users\ASUS\Documents\emnaPI\src\main\java\com\example\reservation\Controller\ReservationBlockPeriodController.java
 C:\Users\ASUS\Documents\emnaPI\src\main\java\com\example\reservation\Services\ReservationService.java
+C:\Users\ASUS\Documents\emnaPI\src\main\java\com\example\reservation\Entities\Enums\ReservationBlockType.java
 C:\Users\ASUS\Documents\emnaPI\src\main\java\com\example\reservation\Entities\Equipment.java
 C:\Users\ASUS\Documents\emnaPI\src\main\java\com\example\reservation\Controller\RoomController.java
+C:\Users\ASUS\Documents\emnaPI\src\main\java\com\example\reservation\Entities\ReservationBlockPeriod.java
 C:\Users\ASUS\Documents\emnaPI\src\main\java\com\example\reservation\Services\RoomService.java

@@ -13,7 +13,7 @@ import java.util.List;
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
     @Query("SELECT r FROM Reservation r WHERE r.room.id = :roomId " +
-           "AND r.status IN ('APPROVED', 'PENDING') " +
+           "AND r.status IN ('APPROVED', 'PENDING', 'MODIFICATION_REQUESTED') " +
            "AND r.startTime < :endTime AND r.endTime > :startTime")
     List<Reservation> findConflictingReservationsForRoom(
             @Param("roomId") Long roomId,
@@ -21,7 +21,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             @Param("endTime") LocalDateTime endTime);
 
     @Query("SELECT r FROM Reservation r JOIN r.equipments e WHERE e.id = :equipmentId " +
-           "AND r.status IN ('APPROVED', 'PENDING') " +
+           "AND r.status IN ('APPROVED', 'PENDING', 'MODIFICATION_REQUESTED') " +
            "AND r.startTime < :endTime AND r.endTime > :startTime")
     List<Reservation> findConflictingReservationsForEquipment(
             @Param("equipmentId") Long equipmentId,

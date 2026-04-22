@@ -1,0 +1,169 @@
+<div class="reservations-page">
+  <mat-card class="cardWithShadow theme-card hero-card m-b-24">
+    <mat-card-content class="p-24">
+      <div class="hero-head">
+        <div>
+          <p class="hero-kicker m-0">Suivi personnel</p>
+          <h2 class="mat-subtitle-2 f-s-24 f-w-600 m-b-8 m-t-8">Mes réservations</h2>
+          <p class="text-muted m-0">Recherche, filtres, badges lisibles et timeline de suivi en temps réel.</p>
+        </div>
+        <button mat-stroked-button color="primary" (click)="loadReservations(true)">
+          <i-tabler name="refresh" class="icon-18 m-r-8"></i-tabler>
+          Actualiser
+        </button>
+      </div>
+
+      <div class="row m-t-24">
+        <div class="col-sm-6 col-xl-3 m-b-16">
+          <mat-card class="mini-stat mini-stat--primary">
+            <mat-card-content class="p-16">
+              <div class="mini-stat__label">Total</div>
+              <div class="mini-stat__value">{{ counts.total }}</div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <div class="col-sm-6 col-xl-3 m-b-16">
+          <mat-card class="mini-stat mini-stat--success">
+            <mat-card-content class="p-16">
+              <div class="mini-stat__label">En cours</div>
+              <div class="mini-stat__value">{{ counts.active }}</div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <div class="col-sm-6 col-xl-3 m-b-16">
+          <mat-card class="mini-stat mini-stat--warning">
+            <mat-card-content class="p-16">
+              <div class="mini-stat__label">En attente</div>
+              <div class="mini-stat__value">{{ counts.pending }}</div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <div class="col-sm-6 col-xl-3 m-b-16">
+          <mat-card class="mini-stat mini-stat--attention">
+            <mat-card-content class="p-16">
+              <div class="mini-stat__label">À revoir</div>
+              <div class="mini-stat__value">{{ counts.attention }}</div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+
+      <div class="row m-t-8">
+        <div class="col-12 col-lg-6 m-b-16">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Recherche</mat-label>
+            <input
+              matInput
+              [(ngModel)]="searchTerm"
+              placeholder="Salle, équipement, commentaire, identifiant..."
+            />
+            <i-tabler matSuffix name="search" class="icon-18 text-muted"></i-tabler>
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3 m-b-16">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Filtre</mat-label>
+            <mat-select [(ngModel)]="statusFilter">
+              <mat-option value="ALL">Tout afficher</mat-option>
+              <mat-option value="PENDING">En attente</mat-option>
+              <mat-option value="APPROVED">Approuvées</mat-option>
+              <mat-option value="MODIFICATION_REQUESTED">Modification requise</mat-option>
+              <mat-option value="ACTIVE">En cours</mat-option>
+              <mat-option value="UPCOMING">À venir</mat-option>
+              <mat-option value="COMPLETED">Terminées</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3 m-b-16">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Tri</mat-label>
+            <mat-select [(ngModel)]="sortMode">
+              <mat-option value="RECENT">Plus récentes</mat-option>
+              <mat-option value="OLDEST">Plus anciennes</mat-option>
+              <mat-option value="STATUS">Par priorité</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="reservations-timeline" *ngIf="filteredReservations.length > 0; else emptyState">
+    <div class="reservations-timeline__item" *ngFor="let reservation of filteredReservations">
+      <div class="reservations-timeline__dot"></div>
+
+      <mat-card class="cardWithShadow theme-card reservations-card">
+        <mat-card-content class="p-24">
+          <div class="reservations-card__head">
+            <div>
+              <div class="d-flex gap-8 flex-wrap align-items-center">
+                <span [class]="getStatusClass(reservation.status)">{{ getStatusLabel(reservation.status) }}</span>
+                <span [class]="getLiveStateClass(reservation)">{{ getLiveStateLabel(reservation) }}</span>
+              </div>
+              <h3 class="m-t-16 m-b-8">
+                {{ reservation.room?.name || 'Sans salle' }}
+                <span class="text-muted" *ngIf="reservation.equipments?.length > 0">
+                  + {{ reservation.equipments.length }} équipement(s)
+                </span>
+              </h3>
+              <p class="text-muted m-0">{{ getTimeHint(reservation) }}</p>
+            </div>
+
+            <button
+              mat-stroked-button
+              color="warn"
+              *ngIf="canCancel(reservation)"
+              (click)="cancelReservation(reservation.id)">
+              Annuler
+            </button>
+          </div>
+
+          <div class="reservations-meta m-t-20">
+            <div class="reservations-meta__item">
+              <i-tabler name="calendar-event" class="icon-18 text-primary"></i-tabler>
+              <div>
+                <strong>Créneau</strong>
+                <div>{{ reservation.startTime | date:'dd/MM/yyyy HH:mm' }} - {{ reservation.endTime | date:'HH:mm' }}</div>
+              </div>
+            </div>
+
+            <div class="reservations-meta__item" *ngIf="reservation.room">
+              <i-tabler name="door" class="icon-18 text-primary"></i-tabler>
+              <div>
+                <strong>Salle</strong>
+                <div>{{ reservation.room.name }}</div>
+              </div>
+            </div>
+
+            <div class="reservations-meta__item" *ngIf="reservation.equipments?.length > 0">
+              <i-tabler name="device-desktop" class="icon-18 text-primary"></i-tabler>
+              <div>
+                <strong>Équipements</strong>
+                <div>{{ getEquipmentsLabel(reservation) }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="validation-box m-t-20" *ngIf="reservation.validatedBy || reservation.validationComment">
+            <div class="validation-box__title">Retour de validation</div>
+            <p class="m-b-8 text-muted" *ngIf="reservation.validatedBy">
+              Traité par <strong>{{ reservation.validatedBy }}</strong>
+              <span *ngIf="reservation.validatedAt"> le {{ reservation.validatedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+            </p>
+            <p class="m-0" *ngIf="reservation.validationComment">"{{ reservation.validationComment }}"</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <ng-template #emptyState>
+    <mat-card class="cardWithShadow theme-card empty-card">
+      <mat-card-content class="p-40 text-center">
+        <i-tabler name="calendar-off" class="icon-48 text-muted"></i-tabler>
+        <h4 class="m-t-16 m-b-8">Aucune réservation trouvée</h4>
+        <p class="text-muted m-0">Essaie un autre filtre ou crée une nouvelle réservation.</p>
+      </mat-card-content>
+    </mat-card>
+  </ng-template>
+</div>

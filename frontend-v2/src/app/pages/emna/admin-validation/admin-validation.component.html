@@ -1,0 +1,173 @@
+<div class="validation-page">
+  <mat-card class="cardWithShadow theme-card header-card m-b-24">
+    <mat-card-content class="p-24">
+      <div class="header-row">
+        <div>
+          <p class="header-kicker m-0">Pôle validation</p>
+          <h2 class="mat-subtitle-2 f-s-24 f-w-600 m-b-8 m-t-8">Décisions admin guidées</h2>
+          <p class="text-muted m-0">Commentaires intégrés, tri intelligent et priorisation visuelle des demandes.</p>
+        </div>
+        <button mat-stroked-button color="primary" (click)="loadPendingReservations(true)">
+          <i-tabler name="refresh" class="icon-18 m-r-8"></i-tabler>
+          Actualiser
+        </button>
+      </div>
+
+      <div class="row m-t-24">
+        <div class="col-sm-6 col-xl-3 m-b-16">
+          <mat-card class="summary-card summary-card--primary">
+            <mat-card-content class="p-16">
+              <div class="summary-card__label">À traiter</div>
+              <div class="summary-card__value">{{ summary.total }}</div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <div class="col-sm-6 col-xl-3 m-b-16">
+          <mat-card class="summary-card summary-card--danger">
+            <mat-card-content class="p-16">
+              <div class="summary-card__label">Priorité haute</div>
+              <div class="summary-card__value">{{ summary.high }}</div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <div class="col-sm-6 col-xl-3 m-b-16">
+          <mat-card class="summary-card summary-card--warning">
+            <mat-card-content class="p-16">
+              <div class="summary-card__label">Démarrage < 24h</div>
+              <div class="summary-card__value">{{ summary.soon }}</div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <div class="col-sm-6 col-xl-3 m-b-16">
+          <mat-card class="summary-card summary-card--info">
+            <mat-card-content class="p-16">
+              <div class="summary-card__label">Matériel sensible</div>
+              <div class="summary-card__value">{{ summary.sensitive }}</div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+
+      <div class="row m-t-8">
+        <div class="col-12 col-lg-3 m-b-16">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Validation en tant que</mat-label>
+            <input matInput [(ngModel)]="adminId" />
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-lg-5 m-b-16">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Recherche</mat-label>
+            <input matInput [(ngModel)]="searchTerm" placeholder="Étudiant, salle, équipement..." />
+            <i-tabler matSuffix name="search" class="icon-18 text-muted"></i-tabler>
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-lg-4 m-b-16">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Priorité</mat-label>
+            <mat-select [(ngModel)]="priorityFilter">
+              <mat-option value="ALL">Toutes</mat-option>
+              <mat-option value="HIGH">Haute</mat-option>
+              <mat-option value="MEDIUM">Moyenne</mat-option>
+              <mat-option value="LOW">Normale</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div *ngIf="errorMessage" class="m-t-8 p-16 border-radius-8 f-w-500 bg-light-error text-error d-flex align-items-center">
+        <i-tabler name="alert-circle" class="icon-20 m-r-8"></i-tabler>
+        {{ errorMessage }}
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="decision-list" *ngIf="filteredReservations.length > 0; else emptyState">
+    <mat-card class="cardWithShadow theme-card decision-card" *ngFor="let reservation of filteredReservations">
+      <mat-card-content class="p-24">
+        <div class="decision-card__head">
+          <div>
+            <div class="d-flex align-items-center flex-wrap gap-8">
+              <span class="student-chip">{{ reservation.userId }}</span>
+              <span [class]="getPriorityClass(reservation)">{{ getPriorityLabel(reservation) }}</span>
+              <span class="urgency-chip">{{ getUrgencyHint(reservation) }}</span>
+            </div>
+            <h3 class="m-t-16 m-b-8">{{ reservation.room?.name || 'Ressource sans salle' }}</h3>
+            <p class="text-muted m-0">{{ reservation.startTime | date:'dd/MM/yyyy HH:mm' }} - {{ reservation.endTime | date:'HH:mm' }}</p>
+          </div>
+          <div class="decision-score">
+            <span class="decision-score__label">Score</span>
+            <strong>{{ getPriorityLabel(reservation) }}</strong>
+          </div>
+        </div>
+
+        <div class="resource-summary m-t-20">
+          <div class="resource-summary__item" *ngIf="reservation.room">
+            <i-tabler name="door" class="icon-18 text-primary"></i-tabler>
+            <div>
+              <strong>Salle</strong>
+              <div>{{ reservation.room.name }}<span *ngIf="reservation.room.capacity"> - {{ reservation.room.capacity }} places</span></div>
+            </div>
+          </div>
+
+          <div class="resource-summary__item" *ngIf="reservation.equipments?.length > 0">
+            <i-tabler name="device-desktop" class="icon-18 text-primary"></i-tabler>
+            <div>
+              <strong>Équipements</strong>
+              <div>{{ getEquipmentsLabel(reservation) }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flags-row m-t-16">
+          <span class="flag flag--warning" *ngIf="reservation.room?.capacity >= 20">Grande salle</span>
+          <span class="flag flag--danger" *ngIf="hasSensitiveEquipment(reservation)">Matériel sensible</span>
+          <span class="flag flag--info" *ngIf="reservation.equipments?.length > 1">Réservation multi-équipements</span>
+        </div>
+
+        <mat-form-field appearance="outline" class="w-100 m-t-20">
+          <mat-label>Commentaire de validation</mat-label>
+          <textarea
+            matInput
+            rows="3"
+            [(ngModel)]="commentDrafts[reservation.id]"
+            placeholder="Obligatoire pour un refus ou une demande de modification"></textarea>
+        </mat-form-field>
+
+        <div class="actions-row">
+          <button
+            mat-flat-button
+            class="approve-btn"
+            [disabled]="isBusy(reservation.id)"
+            (click)="validate(reservation, 'APPROVED')">
+            Approuver
+          </button>
+          <button
+            mat-flat-button
+            color="warn"
+            [disabled]="isBusy(reservation.id)"
+            (click)="validate(reservation, 'REJECTED')">
+            Refuser
+          </button>
+          <button
+            mat-flat-button
+            class="edit-btn"
+            [disabled]="isBusy(reservation.id)"
+            (click)="validate(reservation, 'MODIFICATION_REQUESTED')">
+            Demander modification
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <ng-template #emptyState>
+    <mat-card class="cardWithShadow theme-card empty-card">
+      <mat-card-content class="p-40 text-center">
+        <i-tabler name="circle-check" class="icon-48 text-success"></i-tabler>
+        <h4 class="m-t-16 m-b-8">Aucune réservation à valider</h4>
+        <p class="text-muted m-0">La file est vide pour le moment.</p>
+      </mat-card-content>
+    </mat-card>
+  </ng-template>
+</div>

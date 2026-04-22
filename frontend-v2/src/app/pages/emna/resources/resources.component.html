@@ -1,0 +1,241 @@
+<div class="resources-page">
+  <mat-card class="cardWithShadow theme-card filter-card m-b-24">
+    <mat-card-content class="p-24">
+      <div class="hero-row">
+        <div>
+          <p class="section-kicker m-0">Catalogue intelligent</p>
+          <h2 class="mat-subtitle-2 f-s-24 f-w-600 m-b-8 m-t-8">Explorer et réserver plus vite</h2>
+          <p class="text-muted m-0">
+            Recherche instantanée, filtres métier, repérage des ressources sensibles et accès direct à la réservation.
+          </p>
+        </div>
+        <button mat-stroked-button color="primary" (click)="resetFilters()">
+          <i-tabler name="refresh" class="icon-18 m-r-8"></i-tabler>
+          Réinitialiser
+        </button>
+      </div>
+
+      <div class="row m-t-24">
+        <div class="col-12 col-lg-5 m-b-16">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Recherche globale</mat-label>
+            <input
+              matInput
+              [(ngModel)]="searchTerm"
+              placeholder="Salle, lieu, équipement, type, référence..."
+            />
+            <i-tabler matSuffix name="search" class="icon-18 text-muted"></i-tabler>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-2 m-b-16">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Statut salle</mat-label>
+            <mat-select [(ngModel)]="roomStatusFilter">
+              <mat-option value="ALL">Tous</mat-option>
+              <mat-option value="AVAILABLE">Disponible</mat-option>
+              <mat-option value="MAINTENANCE">Maintenance</mat-option>
+              <mat-option value="UNAVAILABLE">Indisponible</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-2 m-b-16">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Statut équipement</mat-label>
+            <mat-select [(ngModel)]="equipmentStatusFilter">
+              <mat-option value="ALL">Tous</mat-option>
+              <mat-option value="AVAILABLE">Disponible</mat-option>
+              <mat-option value="MAINTENANCE">Maintenance</mat-option>
+              <mat-option value="UNAVAILABLE">Indisponible</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-3 m-b-16">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Type équipement</mat-label>
+            <mat-select [(ngModel)]="selectedType">
+              <mat-option value="ALL">Tous les types</mat-option>
+              <mat-option *ngFor="let type of equipmentTypes" [value]="type">{{ type }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-3 m-b-16">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Capacité minimale</mat-label>
+            <input matInput type="number" min="0" [(ngModel)]="minimumCapacity" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-lg-3 d-flex align-items-center m-b-16">
+          <mat-slide-toggle color="primary" [(ngModel)]="sensitiveOnly">
+            Afficher seulement le matériel sensible
+          </mat-slide-toggle>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="row m-b-24">
+    <div class="col-sm-6 col-xl-3 m-b-16">
+      <mat-card class="cardWithShadow summary-card summary-card--rooms">
+        <mat-card-content class="p-20">
+          <p class="summary-label m-0">Salles</p>
+          <h3 class="m-t-12 m-b-8">{{ roomTypesSummary.total }}</h3>
+          <p class="text-muted m-0">{{ roomTypesSummary.available }} disponibles</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-sm-6 col-xl-3 m-b-16">
+      <mat-card class="cardWithShadow summary-card summary-card--large">
+        <mat-card-content class="p-20">
+          <p class="summary-label m-0">Grandes salles</p>
+          <h3 class="m-t-12 m-b-8">{{ roomTypesSummary.large }}</h3>
+          <p class="text-muted m-0">Capacité de 20 personnes ou plus</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-sm-6 col-xl-3 m-b-16">
+      <mat-card class="cardWithShadow summary-card summary-card--equipments">
+        <mat-card-content class="p-20">
+          <p class="summary-label m-0">Équipements</p>
+          <h3 class="m-t-12 m-b-8">{{ equipmentSummary.total }}</h3>
+          <p class="text-muted m-0">{{ equipmentSummary.available }} disponibles</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-sm-6 col-xl-3 m-b-16">
+      <mat-card class="cardWithShadow summary-card summary-card--sensitive">
+        <mat-card-content class="p-20">
+          <p class="summary-label m-0">Matériel sensible</p>
+          <h3 class="m-t-12 m-b-8">{{ equipmentSummary.sensitive }}</h3>
+          <p class="text-muted m-0">{{ equipmentSummary.maintenance }} en maintenance</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="section-head m-b-16">
+    <div>
+      <h2 class="mat-subtitle-2 f-s-24 f-w-600 m-b-8">Salles</h2>
+      <p class="text-muted m-0">{{ filteredRooms.length }} résultat(s) après filtrage</p>
+    </div>
+  </div>
+
+  <div class="resource-grid m-b-24" *ngIf="filteredRooms.length > 0; else noRooms">
+    <mat-card class="cardWithShadow theme-card resource-card" *ngFor="let room of filteredRooms">
+      <mat-card-header class="resource-card__header">
+        <div class="d-flex align-items-center justify-content-between w-100">
+          <mat-card-title class="m-b-0 f-s-16 f-w-600 d-flex align-items-center">
+            <i-tabler name="door" class="icon-20 m-r-8 text-primary"></i-tabler>
+            {{ room.name }}
+          </mat-card-title>
+          <span class="status-pill"
+                [ngClass]="{
+                  'status-pill--success': room.status === 'AVAILABLE',
+                  'status-pill--warning': room.status === 'MAINTENANCE',
+                  'status-pill--danger': room.status === 'UNAVAILABLE'
+                }">
+            {{ room.status === 'AVAILABLE' ? 'Disponible' : room.status === 'UNAVAILABLE' ? 'Indisponible' : 'Maintenance' }}
+          </span>
+        </div>
+      </mat-card-header>
+      <mat-card-content class="p-24">
+        <div class="resource-meta">
+          <span><i-tabler name="users" class="icon-18 m-r-6 text-muted"></i-tabler>{{ room.capacity }} places</span>
+          <span><i-tabler name="map-pin" class="icon-18 m-r-6 text-muted"></i-tabler>{{ room.location }}</span>
+        </div>
+
+        <div class="resource-tags m-t-16">
+          <span class="resource-tag" *ngIf="room.capacity >= 20">Grande capacité</span>
+          <span class="resource-tag" *ngIf="room.status === 'AVAILABLE'">Réservable</span>
+        </div>
+
+        <div class="resource-actions m-t-24">
+          <button
+            mat-flat-button
+            color="primary"
+            [disabled]="room.status !== 'AVAILABLE'"
+            (click)="reserveRoom(room.id)">
+            <i-tabler name="calendar-plus" class="icon-18 m-r-8"></i-tabler>
+            Réserver vite
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <ng-template #noRooms>
+    <mat-card class="cardWithShadow theme-card empty-card m-b-24">
+      <mat-card-content class="p-32 text-center">
+        <i-tabler name="search-off" class="icon-40 text-muted"></i-tabler>
+        <h4 class="m-t-16 m-b-8">Aucune salle ne correspond aux filtres</h4>
+        <p class="text-muted m-0">Essaie d’élargir la recherche ou de remettre les filtres à zéro.</p>
+      </mat-card-content>
+    </mat-card>
+  </ng-template>
+
+  <mat-divider class="m-y-24"></mat-divider>
+
+  <div class="section-head m-b-16">
+    <div>
+      <h2 class="mat-subtitle-2 f-s-24 f-w-600 m-b-8">Équipements</h2>
+      <p class="text-muted m-0">{{ filteredEquipments.length }} résultat(s) après filtrage</p>
+    </div>
+  </div>
+
+  <div class="resource-grid" *ngIf="filteredEquipments.length > 0; else noEquipments">
+    <mat-card class="cardWithShadow theme-card resource-card" *ngFor="let eq of filteredEquipments">
+      <mat-card-header class="resource-card__header">
+        <div class="d-flex align-items-center justify-content-between w-100">
+          <mat-card-title class="m-b-0 f-s-16 f-w-600 d-flex align-items-center">
+            <i-tabler name="device-desktop" class="icon-20 m-r-8 text-primary"></i-tabler>
+            {{ eq.name }}
+          </mat-card-title>
+          <span class="status-pill"
+                [ngClass]="{
+                  'status-pill--success': eq.status === 'AVAILABLE',
+                  'status-pill--warning': eq.status === 'MAINTENANCE',
+                  'status-pill--danger': eq.status === 'UNAVAILABLE'
+                }">
+            {{ eq.status === 'AVAILABLE' ? 'Disponible' : eq.status === 'UNAVAILABLE' ? 'Indisponible' : 'Maintenance' }}
+          </span>
+        </div>
+      </mat-card-header>
+      <mat-card-content class="p-24">
+        <div class="resource-meta">
+          <span><i-tabler name="tag" class="icon-18 m-r-6 text-muted"></i-tabler>{{ eq.type || 'Non défini' }}</span>
+          <span><i-tabler name="barcode" class="icon-18 m-r-6 text-muted"></i-tabler>{{ eq.reference || 'Sans référence' }}</span>
+        </div>
+
+        <div class="resource-tags m-t-16">
+          <span class="resource-tag resource-tag--alert" *ngIf="eq.sensitive">Validation admin requise</span>
+          <span class="resource-tag" *ngIf="eq.status === 'AVAILABLE'">Utilisable</span>
+        </div>
+
+        <div class="resource-actions m-t-24">
+          <button
+            mat-flat-button
+            color="primary"
+            [disabled]="eq.status !== 'AVAILABLE'"
+            (click)="reserveEquipment(eq.id)">
+            <i-tabler name="calendar-plus" class="icon-18 m-r-8"></i-tabler>
+            Réserver vite
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <ng-template #noEquipments>
+    <mat-card class="cardWithShadow theme-card empty-card">
+      <mat-card-content class="p-32 text-center">
+        <i-tabler name="search-off" class="icon-40 text-muted"></i-tabler>
+        <h4 class="m-t-16 m-b-8">Aucun équipement ne correspond aux filtres</h4>
+        <p class="text-muted m-0">La combinaison actuelle est trop restrictive.</p>
+      </mat-card-content>
+    </mat-card>
+  </ng-template>
+</div>

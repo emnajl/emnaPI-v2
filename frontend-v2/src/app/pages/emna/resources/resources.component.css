@@ -1,0 +1,156 @@
+.resources-page {
+  display: block;
+}
+
+.filter-card {
+  background:
+    radial-gradient(circle at top right, rgba(16, 185, 129, 0.14), transparent 36%),
+    radial-gradient(circle at left bottom, rgba(37, 99, 235, 0.12), transparent 30%),
+    #fff;
+}
+
+.hero-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.section-kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 12px;
+  font-weight: 700;
+  color: #2563eb;
+}
+
+.summary-card {
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  overflow: hidden;
+}
+
+.summary-card h3 {
+  font-size: 30px;
+  line-height: 1;
+}
+
+.summary-card--rooms {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(255, 255, 255, 0.98));
+}
+
+.summary-card--large {
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.12), rgba(255, 255, 255, 0.98));
+}
+
+.summary-card--equipments {
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.12), rgba(255, 255, 255, 0.98));
+}
+
+.summary-card--sensitive {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(255, 255, 255, 0.98));
+}
+
+.summary-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.resource-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+}
+
+.resource-card {
+  height: 100%;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+}
+
+.resource-card__header {
+  padding: 20px 24px 0;
+}
+
+.resource-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: #475569;
+}
+
+.resource-meta span {
+  display: flex;
+  align-items: center;
+}
+
+.resource-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.resource-tag {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.resource-tag--alert {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.status-pill {
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.status-pill--success {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.status-pill--warning {
+  background: #fffbeb;
+  color: #d97706;
+}
+
+.status-pill--danger {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.resource-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.empty-card {
+  border: 1px dashed rgba(148, 163, 184, 0.5);
+}
+
+@media (max-width: 768px) {
+  .resource-actions {
+    justify-content: stretch;
+  }
+
+  .resource-actions button {
+    width: 100%;
+  }
+}

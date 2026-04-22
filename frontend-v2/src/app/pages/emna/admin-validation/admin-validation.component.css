@@ -1,0 +1,182 @@
+.header-card {
+  background:
+    radial-gradient(circle at top right, rgba(239, 68, 68, 0.1), transparent 24%),
+    radial-gradient(circle at left bottom, rgba(245, 158, 11, 0.1), transparent 28%),
+    #fff;
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.header-kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 12px;
+  font-weight: 700;
+  color: #ea580c;
+}
+
+.summary-card {
+  border: 1px solid rgba(148, 163, 184, 0.15);
+}
+
+.summary-card__label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.summary-card__value {
+  margin-top: 12px;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.summary-card--primary {
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.summary-card--danger {
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.summary-card--warning {
+  background: rgba(245, 158, 11, 0.09);
+}
+
+.summary-card--info {
+  background: rgba(14, 165, 233, 0.08);
+}
+
+.decision-list {
+  display: grid;
+  gap: 18px;
+}
+
+.decision-card {
+  border: 1px solid rgba(148, 163, 184, 0.14);
+}
+
+.decision-card__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.student-chip,
+.urgency-chip,
+.priority,
+.flag {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.student-chip {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.urgency-chip {
+  background: #f8fafc;
+  color: #475569;
+}
+
+.priority--high {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.priority--medium {
+  background: #fffbeb;
+  color: #d97706;
+}
+
+.priority--low {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.decision-score {
+  min-width: 140px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.decision-score__label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #64748b;
+}
+
+.resource-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.resource-summary__item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 14px;
+  border-radius: 14px;
+  background: #f8fafc;
+}
+
+.flags-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.flag--warning {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+.flag--danger {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.flag--info {
+  background: #ecfeff;
+  color: #0891b2;
+}
+
+.actions-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.approve-btn {
+  background: #10b981;
+  color: #fff;
+}
+
+.edit-btn {
+  background: #f59e0b;
+  color: #fff;
+}
+
+.empty-card {
+  border: 1px dashed rgba(148, 163, 184, 0.45);
+}

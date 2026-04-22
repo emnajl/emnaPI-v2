@@ -1,0 +1,202 @@
+<div class="equipments-page">
+  <mat-card class="cardWithShadow theme-card hero-card m-b-24">
+    <mat-card-content class="p-24">
+      <div class="hero-head">
+        <div>
+          <p class="hero-kicker m-0">Gestion des équipements</p>
+          <h2 class="mat-subtitle-2 f-s-24 f-w-600 m-b-8 m-t-8">Administration du parc matériel</h2>
+          <p class="text-muted m-0">Suivi des équipements, sensibilité, maintenance et disponibilité à la réservation.</p>
+        </div>
+        <button mat-stroked-button color="primary" (click)="resetForm()">
+          <i-tabler name="plus" class="icon-18 m-r-8"></i-tabler>
+          Nouveau matériel
+        </button>
+      </div>
+
+      <div class="row m-t-24">
+        <div class="col-sm-6 col-xl-3 m-b-16">
+          <mat-card class="mini-stat mini-stat--primary">
+            <mat-card-content class="p-16">
+              <div class="mini-stat__label">Équipements</div>
+              <div class="mini-stat__value">{{ stats.total }}</div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <div class="col-sm-6 col-xl-3 m-b-16">
+          <mat-card class="mini-stat mini-stat--success">
+            <mat-card-content class="p-16">
+              <div class="mini-stat__label">Disponibles</div>
+              <div class="mini-stat__value">{{ stats.available }}</div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <div class="col-sm-6 col-xl-3 m-b-16">
+          <mat-card class="mini-stat mini-stat--warning">
+            <mat-card-content class="p-16">
+              <div class="mini-stat__label">Maintenance</div>
+              <div class="mini-stat__value">{{ stats.maintenance }}</div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <div class="col-sm-6 col-xl-3 m-b-16">
+          <mat-card class="mini-stat mini-stat--danger">
+            <mat-card-content class="p-16">
+              <div class="mini-stat__label">Sensibles</div>
+              <div class="mini-stat__value">{{ stats.sensitive }}</div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+
+      <div *ngIf="message" class="m-t-8 p-16 border-radius-8 f-w-500"
+           [ngClass]="message.includes('Impossible') || message.includes('Erreur') ? 'bg-light-error text-error' : 'bg-light-success text-success'">
+        {{ message }}
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="cardWithShadow theme-card section-card m-b-24">
+    <mat-card-content class="p-24">
+      <div class="section-head m-b-20">
+        <div>
+          <p class="section-kicker m-0">Formulaire</p>
+          <h3 class="m-b-0 m-t-8">{{ isEditing ? 'Modifier un équipement' : 'Ajouter un nouveau matériel' }}</h3>
+        </div>
+      </div>
+
+      <form (ngSubmit)="saveEquipment()">
+        <div class="row">
+          <div class="col-12 col-md-6 m-b-16">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Nom du matériel</mat-label>
+              <input matInput [(ngModel)]="eqForm.name" name="name" required>
+            </mat-form-field>
+          </div>
+
+          <div class="col-12 col-md-6 m-b-16">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Type</mat-label>
+              <input matInput [(ngModel)]="eqForm.type" name="type">
+            </mat-form-field>
+          </div>
+
+          <div class="col-12 col-md-4 m-b-16">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Référence interne</mat-label>
+              <input matInput [(ngModel)]="eqForm.reference" name="reference">
+            </mat-form-field>
+          </div>
+
+          <div class="col-12 col-md-4 m-b-16">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Statut</mat-label>
+              <mat-select [(ngModel)]="eqForm.status" name="status">
+                <mat-option value="AVAILABLE">Disponible</mat-option>
+                <mat-option value="MAINTENANCE">En maintenance</mat-option>
+                <mat-option value="UNAVAILABLE">Indisponible</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="col-12 col-md-4 m-b-16 toggle-col">
+            <div class="toggle-box">
+              <div>
+                <div class="toggle-title">Matériel sensible</div>
+                <div class="toggle-help">Nécessite une validation admin lors de la réservation</div>
+              </div>
+              <mat-slide-toggle [(ngModel)]="eqForm.sensitive" name="sensitive" color="warn"></mat-slide-toggle>
+            </div>
+          </div>
+
+          <div class="col-12 action-row">
+            <button mat-flat-button color="primary" type="submit" class="primary-action">
+              {{ isEditing ? 'Mettre à jour' : 'Enregistrer' }}
+            </button>
+            <button mat-stroked-button color="warn" type="button" *ngIf="isEditing" (click)="resetForm()">
+              Annuler
+            </button>
+          </div>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="cardWithShadow theme-card section-card">
+    <mat-card-content class="p-24">
+      <div class="section-head m-b-20">
+        <div>
+          <p class="section-kicker m-0">Inventaire</p>
+          <h3 class="m-b-0 m-t-8">Liste des équipements</h3>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table mat-table [dataSource]="equipments" class="w-100 admin-table">
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef class="p-l-0">ID</th>
+            <td mat-cell *matCellDef="let eq" class="p-l-0 text-muted">#{{ eq.id }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Libellé</th>
+            <td mat-cell *matCellDef="let eq" class="f-w-600">{{ eq.name }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>Réf. et type</th>
+            <td mat-cell *matCellDef="let eq">
+              {{ eq.type || 'Non défini' }}<br>
+              <span class="text-muted f-s-12">Réf: {{ eq.reference || 'Sans référence' }}</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="sensitive">
+            <th mat-header-cell *matHeaderCellDef>Sensibilité</th>
+            <td mat-cell *matCellDef="let eq">
+              <span class="sensibility-badge sensibility-badge--danger" *ngIf="eq.sensitive">
+                <i-tabler name="alert-circle" class="icon-16 m-r-4"></i-tabler>
+                Sensible
+              </span>
+              <span class="sensibility-badge sensibility-badge--muted" *ngIf="!eq.sensitive">Standard</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Statut</th>
+            <td mat-cell *matCellDef="let eq">
+              <span class="status-badge"
+                    [ngClass]="{
+                      'status-badge--success': eq.status === 'AVAILABLE',
+                      'status-badge--warning': eq.status === 'MAINTENANCE',
+                      'status-badge--danger': eq.status === 'UNAVAILABLE'
+                    }">
+                {{ eq.status === 'AVAILABLE' ? 'Disponible' : eq.status === 'UNAVAILABLE' ? 'Indisponible' : 'Maintenance' }}
+              </span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="text-right">Actions</th>
+            <td mat-cell *matCellDef="let eq" class="text-right">
+              <button mat-icon-button color="primary" (click)="editEquipment(eq)" matTooltip="Éditer">
+                <i-tabler name="edit" class="icon-18"></i-tabler>
+              </button>
+              <button mat-icon-button color="warn" (click)="deleteEquipment(eq.id)" matTooltip="Supprimer">
+                <i-tabler name="trash" class="icon-18"></i-tabler>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell p-24 text-center f-w-500 text-muted" colspan="6">
+              Aucun équipement enregistré dans le système.
+            </td>
+          </tr>
+        </table>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

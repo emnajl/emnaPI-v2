@@ -1,5 +1,7 @@
 package com.example.reservation.Controller;
 
+import com.example.reservation.Dto.ReservationRuleDecisionResponse;
+import com.example.reservation.Dto.ReservationRulePreviewRequest;
 import com.example.reservation.Entities.Reservation;
 import com.example.reservation.Services.ReservationService;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,12 @@ public class ReservationController {
         return ResponseEntity.ok(reservationService.createReservation(reservation));
     }
 
+    @PostMapping("/preview")
+    public ResponseEntity<ReservationRuleDecisionResponse> previewReservationRules(
+            @RequestBody ReservationRulePreviewRequest request) {
+        return ResponseEntity.ok(reservationService.previewReservationRules(request));
+    }
+
     @GetMapping
     public ResponseEntity<List<Reservation>> getAllReservations() {
         return ResponseEntity.ok(reservationService.getAllReservations());
@@ -30,11 +38,11 @@ public class ReservationController {
     public ResponseEntity<Reservation> validateReservation(
             @PathVariable Long id,
             @RequestBody Map<String, String> payload) {
-        
+
         String status = payload.get("status");
         String adminId = payload.get("adminId");
         String comment = payload.get("comment");
-        
+
         return ResponseEntity.ok(reservationService.validateReservation(id, status, adminId, comment));
     }
 
