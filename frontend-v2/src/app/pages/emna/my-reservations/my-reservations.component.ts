@@ -91,13 +91,13 @@ export class MyReservationsComponent implements OnInit, OnDestroy {
         this.now = Date.now();
 
         if (showMessage) {
-          this.snackBar.open('Réservations mises à jour.', 'Fermer', {
+          this.snackBar.open('Reservations updated.', 'Close', {
             duration: 2500
           });
         }
       },
       error: () => {
-        this.snackBar.open('Impossible de charger les réservations.', 'Fermer', {
+        this.snackBar.open('Unable to load reservations.', 'Close', {
           duration: 3500
         });
       }
@@ -108,12 +108,12 @@ export class MyReservationsComponent implements OnInit, OnDestroy {
     this.api.cancelReservation(id).subscribe({
       next: () => {
         this.loadReservations();
-        this.snackBar.open('Réservation annulée avec succès.', 'Fermer', {
+        this.snackBar.open('Reservation cancelled successfully.', 'Close', {
           duration: 3000
         });
       },
       error: () => {
-        this.snackBar.open("L'annulation a échoué.", 'Fermer', {
+        this.snackBar.open('Cancellation failed.', 'Close', {
           duration: 3500
         });
       }
@@ -122,11 +122,11 @@ export class MyReservationsComponent implements OnInit, OnDestroy {
 
   getStatusLabel(status: string): string {
     const map: Record<string, string> = {
-      APPROVED: 'Approuvée',
-      PENDING: 'En attente',
-      REJECTED: 'Refusée',
-      CANCELLED: 'Annulée',
-      MODIFICATION_REQUESTED: 'Modification requise'
+      APPROVED: 'Approved',
+      PENDING: 'Pending',
+      REJECTED: 'Rejected',
+      CANCELLED: 'Cancelled',
+      MODIFICATION_REQUESTED: 'Needs changes'
     };
 
     return map[status] ?? status;
@@ -146,9 +146,9 @@ export class MyReservationsComponent implements OnInit, OnDestroy {
 
   getLiveStateLabel(reservation: any): string {
     const map: Record<string, string> = {
-      UPCOMING: 'À venir',
-      ACTIVE: 'En cours',
-      COMPLETED: 'Terminée'
+      UPCOMING: 'Upcoming',
+      ACTIVE: 'Active',
+      COMPLETED: 'Completed'
     };
 
     return map[this.getLiveStateKey(reservation)];
@@ -171,14 +171,14 @@ export class MyReservationsComponent implements OnInit, OnDestroy {
     const diffToEndMinutes = Math.round((end - this.now) / 60000);
 
     if (this.getLiveStateKey(reservation) === 'ACTIVE') {
-      return `Se termine dans ${this.formatMinutes(diffToEndMinutes)}.`;
+      return `Ends in ${this.formatMinutes(diffToEndMinutes)}.`;
     }
 
     if (this.getLiveStateKey(reservation) === 'UPCOMING') {
-      return `Commence dans ${this.formatMinutes(diffToStartMinutes)}.`;
+      return `Starts in ${this.formatMinutes(diffToStartMinutes)}.`;
     }
 
-    return `Terminée depuis ${this.formatMinutes(Math.abs(diffToEndMinutes))}.`;
+    return `Completed ${this.formatMinutes(Math.abs(diffToEndMinutes))} ago.`;
   }
 
   canCancel(reservation: any): boolean {

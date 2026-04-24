@@ -16,7 +16,7 @@ import { TablerIconsModule } from 'angular-tabler-icons';
 export class AdminValidationComponent implements OnInit {
   pendingReservations: any[] = [];
   errorMessage = '';
-  adminId = 'ChefScolarite';
+  adminId = 'SchoolOfficeLead';
   searchTerm = '';
   priorityFilter = 'ALL';
   processingId: number | null = null;
@@ -78,14 +78,14 @@ export class AdminValidationComponent implements OnInit {
         this.pendingReservations = data.filter(reservation => reservation.status === 'PENDING');
 
         if (showMessage) {
-          this.snackBar.open('File de validation actualisée.', 'Fermer', {
+          this.snackBar.open('Validation queue refreshed.', 'Close', {
             duration: 2500
           });
         }
       },
       error: () => {
-        this.errorMessage = 'Erreur lors du chargement des réservations en attente.';
-        this.snackBar.open(this.errorMessage, 'Fermer', {
+        this.errorMessage = 'Error while loading pending reservations.';
+        this.snackBar.open(this.errorMessage, 'Close', {
           duration: 3500
         });
       }
@@ -97,13 +97,13 @@ export class AdminValidationComponent implements OnInit {
     const comment = (this.commentDrafts[reservation.id] || '').trim();
 
     if (!this.adminId.trim()) {
-      this.errorMessage = "L'identifiant admin est obligatoire.";
+      this.errorMessage = 'Admin identifier is required.';
       return;
     }
 
     if (action !== 'APPROVED' && !comment) {
-      this.errorMessage = 'Une justification est obligatoire pour refuser ou demander une modification.';
-      this.snackBar.open(this.errorMessage, 'Fermer', {
+      this.errorMessage = 'A justification is required to reject or request changes.';
+      this.snackBar.open(this.errorMessage, 'Close', {
         duration: 3500
       });
       return;
@@ -115,14 +115,14 @@ export class AdminValidationComponent implements OnInit {
         delete this.commentDrafts[reservation.id];
         this.processingId = null;
         this.loadPendingReservations();
-        this.snackBar.open(this.getSuccessMessage(action), 'Fermer', {
+        this.snackBar.open(this.getSuccessMessage(action), 'Close', {
           duration: 3000
         });
       },
       error: () => {
         this.processingId = null;
-        this.errorMessage = 'Erreur lors de la validation. Vérifie si le backend est bien lancé.';
-        this.snackBar.open(this.errorMessage, 'Fermer', {
+        this.errorMessage = 'Validation failed. Check that the backend is running.';
+        this.snackBar.open(this.errorMessage, 'Close', {
           duration: 3500
         });
       }
@@ -131,9 +131,9 @@ export class AdminValidationComponent implements OnInit {
 
   getPriorityLabel(reservation: any): string {
     const map: Record<string, string> = {
-      HIGH: 'Priorité haute',
-      MEDIUM: 'Priorité moyenne',
-      LOW: 'Priorité normale'
+      HIGH: 'High priority',
+      MEDIUM: 'Medium priority',
+      LOW: 'Normal priority'
     };
 
     return map[this.getPriorityKey(reservation)];
@@ -151,11 +151,11 @@ export class AdminValidationComponent implements OnInit {
 
   getUrgencyHint(reservation: any): string {
     if (this.startsWithin24Hours(reservation)) {
-      return 'Commence dans moins de 24h';
+      return 'Starts in less than 24h';
     }
 
     const hours = Math.round((new Date(reservation.startTime).getTime() - Date.now()) / 3600000);
-    return `Commence dans ${Math.max(hours, 0)}h`;
+    return `Starts in ${Math.max(hours, 0)}h`;
   }
 
   isBusy(reservationId: number): boolean {
@@ -213,9 +213,9 @@ export class AdminValidationComponent implements OnInit {
 
   private getSuccessMessage(action: 'APPROVED' | 'REJECTED' | 'MODIFICATION_REQUESTED'): string {
     const map: Record<string, string> = {
-      APPROVED: 'Réservation approuvée.',
-      REJECTED: 'Réservation refusée.',
-      MODIFICATION_REQUESTED: 'Demande de modification envoyée.'
+      APPROVED: 'Reservation approved.',
+      REJECTED: 'Reservation rejected.',
+      MODIFICATION_REQUESTED: 'Change request sent.'
     };
 
     return map[action];

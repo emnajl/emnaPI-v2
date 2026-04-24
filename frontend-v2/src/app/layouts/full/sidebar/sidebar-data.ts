@@ -2,10 +2,10 @@ import { NavItem } from './nav-item/nav-item';
 
 export const navItems: NavItem[] = [
   {
-    navCap: 'Module Gestion Des Ressources',
+    navCap: 'Resource Management Module',
   },
   {
-    displayName: 'Dashboard Admin',
+    displayName: 'Admin Dashboard',
     iconName: 'layout-dashboard',
     route: '/emna/admin-dashboard',
     bgcolor: 'primary',
@@ -17,31 +17,31 @@ export const navItems: NavItem[] = [
     bgcolor: 'error',
   },
   {
-    displayName: 'Ressources',
+    displayName: 'Resources',
     iconName: 'box',
     route: '/emna/resources',
     bgcolor: 'success',
   },
   {
-    displayName: 'Réserver',
+    displayName: 'Book',
     iconName: 'calendar-plus',
     route: '/emna/reserve',
     bgcolor: 'primary',
   },
   {
-    displayName: 'Mes Réservations',
+    displayName: 'My Reservations',
     iconName: 'calendar-event',
     route: '/emna/my-reservations',
     bgcolor: 'secondary',
   },
   {
-    displayName: 'Salles',
+    displayName: 'Rooms',
     iconName: 'building',
     route: '/emna/admin-rooms',
     bgcolor: 'warning',
   },
   {
-    displayName: 'Équipements',
+    displayName: 'Equipment',
     iconName: 'device-desktop',
     route: '/emna/admin-equipments',
     bgcolor: 'secondary',

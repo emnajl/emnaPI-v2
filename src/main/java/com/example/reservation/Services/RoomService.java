@@ -1,8 +1,10 @@
 package com.example.reservation.Services;
 
 import com.example.reservation.Entities.Room;
+import com.example.reservation.Entities.Enums.ResourceStatus;
 import com.example.reservation.Repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RoomService {
     private final RoomRepository roomRepository;
+
+    public record DeleteRoomResult(boolean deleted, Room room, String message) {}
 
     public Room createRoom(Room room) {
         return roomRepository.save(room);
@@ -32,18 +36,24 @@ public class RoomService {
             room.setLocation(roomDetails.getLocation());
             room.setStatus(roomDetails.getStatus());
             return roomRepository.save(room);
-        }).orElseThrow(() -> new RuntimeException("Salle non trouvée"));
+        }).orElseThrow(() -> new RuntimeException("Room not found"));
     }
 
-    public void deleteRoom(Long id) {
+    public DeleteRoomResult deleteRoom(Long id) {
+        Room room = roomRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Room not found"));
+
         try {
-            roomRepository.deleteById(id);
-        } catch (org.springframework.dao.DataIntegrityViolationException e) {
-            // Soft delete
-            Room room = roomRepository.findById(id).orElseThrow();
-            room.setStatus(com.example.reservation.Entities.Enums.ResourceStatus.UNAVAILABLE);
-            roomRepository.save(room);
-            throw new RuntimeException("La salle contient des historiques de réservation. Elle a été basculée en Indisponible.");
+            roomRepository.delete(room);
+            return new DeleteRoomResult(true, null, "Room deleted successfully.");
+        } catch (DataIntegrityViolationException e) {
+            room.setStatus(ResourceStatus.UNAVAILABLE);
+            Room updatedRoom = roomRepository.save(room);
+            return new DeleteRoomResult(
+                    false,
+                    updatedRoom,
+                    "This room is linked to reservation history, so it was kept and marked as Unavailable."
+            );
         }
     }
 }

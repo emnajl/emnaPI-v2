@@ -52,20 +52,20 @@ export class AdminEquipmentsComponent implements OnInit {
     if (this.isEditing && this.editingId) {
       this.api.updateEquipment(this.editingId, this.eqForm).subscribe({
         next: () => {
-          this.message = 'Équipement modifié avec succès.';
+          this.message = 'Equipment updated successfully.';
           this.resetForm();
           this.loadEquipments();
         },
-        error: () => this.message = 'Erreur lors de la modification.'
+        error: () => this.message = 'Error while updating the equipment.'
       });
     } else {
       this.api.createEquipment(this.eqForm).subscribe({
         next: () => {
-          this.message = 'Équipement créé avec succès.';
+          this.message = 'Equipment created successfully.';
           this.resetForm();
           this.loadEquipments();
         },
-        error: () => this.message = 'Erreur lors de la création.'
+        error: () => this.message = 'Error while creating the equipment.'
       });
     }
   }
@@ -77,16 +77,19 @@ export class AdminEquipmentsComponent implements OnInit {
   }
 
   deleteEquipment(id: number) {
-    if (confirm('Confirmez-vous la suppression de ce matériel ?')) {
+    if (confirm('Do you confirm deleting this equipment?')) {
       this.api.deleteEquipment(id).subscribe({
-        next: () => this.loadEquipments(),
+        next: response => {
+          this.message = response?.message || 'Equipment deleted successfully.';
+          this.loadEquipments();
+        },
         error: err => {
           if (err.error && typeof err.error === 'string') {
-            this.message = 'Erreur: ' + err.error;
+            this.message = 'Error: ' + err.error;
           } else if (err.error && err.error.message) {
-            this.message = 'Erreur: ' + err.error.message;
+            this.message = 'Error: ' + err.error.message;
           } else {
-            this.message = "Erreur: Impossible de supprimer l'équipement.";
+            this.message = 'Error: Unable to delete the equipment.';
           }
         }
       });

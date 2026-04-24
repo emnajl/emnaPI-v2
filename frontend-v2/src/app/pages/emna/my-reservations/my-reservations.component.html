@@ -1,86 +1,78 @@
-<div class="reservations-page">
-  <mat-card class="cardWithShadow theme-card hero-card m-b-24">
+<div class="reservations-page emna-page">
+  <mat-card class="cardWithShadow theme-card hero-card emna-hero m-b-24">
     <mat-card-content class="p-24">
-      <div class="hero-head">
+      <div class="hero-head emna-hero__head">
         <div>
-          <p class="hero-kicker m-0">Suivi personnel</p>
-          <h2 class="mat-subtitle-2 f-s-24 f-w-600 m-b-8 m-t-8">Mes réservations</h2>
-          <p class="text-muted m-0">Recherche, filtres, badges lisibles et timeline de suivi en temps réel.</p>
+          <p class="hero-kicker emna-kicker m-0">Personal tracking</p>
+          <h2 class="emna-title">My reservations</h2>
+          <p class="emna-subtitle">Search, filters, clear badges and a real-time reservation timeline.</p>
         </div>
-        <button mat-stroked-button color="primary" (click)="loadReservations(true)">
+        <button mat-stroked-button color="primary" class="emna-primary-action" (click)="loadReservations(true)">
           <i-tabler name="refresh" class="icon-18 m-r-8"></i-tabler>
-          Actualiser
+          Refresh
         </button>
       </div>
 
-      <div class="row m-t-24">
-        <div class="col-sm-6 col-xl-3 m-b-16">
-          <mat-card class="mini-stat mini-stat--primary">
-            <mat-card-content class="p-16">
-              <div class="mini-stat__label">Total</div>
-              <div class="mini-stat__value">{{ counts.total }}</div>
-            </mat-card-content>
-          </mat-card>
-        </div>
-        <div class="col-sm-6 col-xl-3 m-b-16">
-          <mat-card class="mini-stat mini-stat--success">
-            <mat-card-content class="p-16">
-              <div class="mini-stat__label">En cours</div>
-              <div class="mini-stat__value">{{ counts.active }}</div>
-            </mat-card-content>
-          </mat-card>
-        </div>
-        <div class="col-sm-6 col-xl-3 m-b-16">
-          <mat-card class="mini-stat mini-stat--warning">
-            <mat-card-content class="p-16">
-              <div class="mini-stat__label">En attente</div>
-              <div class="mini-stat__value">{{ counts.pending }}</div>
-            </mat-card-content>
-          </mat-card>
-        </div>
-        <div class="col-sm-6 col-xl-3 m-b-16">
-          <mat-card class="mini-stat mini-stat--attention">
-            <mat-card-content class="p-16">
-              <div class="mini-stat__label">À revoir</div>
-              <div class="mini-stat__value">{{ counts.attention }}</div>
-            </mat-card-content>
-          </mat-card>
-        </div>
+      <div class="emna-kpi-grid m-t-24">
+        <mat-card class="mini-stat mini-stat--primary emna-kpi">
+          <mat-card-content class="p-16">
+            <div class="mini-stat__label emna-kpi__label">Total</div>
+            <div class="mini-stat__value emna-kpi__value">{{ counts.total }}</div>
+          </mat-card-content>
+        </mat-card>
+        <mat-card class="mini-stat mini-stat--success emna-kpi emna-kpi--green">
+          <mat-card-content class="p-16">
+            <div class="mini-stat__label emna-kpi__label">Active</div>
+            <div class="mini-stat__value emna-kpi__value">{{ counts.active }}</div>
+          </mat-card-content>
+        </mat-card>
+        <mat-card class="mini-stat mini-stat--warning emna-kpi emna-kpi--orange">
+          <mat-card-content class="p-16">
+            <div class="mini-stat__label emna-kpi__label">Pending</div>
+            <div class="mini-stat__value emna-kpi__value">{{ counts.pending }}</div>
+          </mat-card-content>
+        </mat-card>
+        <mat-card class="mini-stat mini-stat--attention emna-kpi emna-kpi--red">
+          <mat-card-content class="p-16">
+            <div class="mini-stat__label emna-kpi__label">Needs review</div>
+            <div class="mini-stat__value emna-kpi__value">{{ counts.attention }}</div>
+          </mat-card-content>
+        </mat-card>
       </div>
 
-      <div class="row m-t-8">
+      <div class="row m-t-24">
         <div class="col-12 col-lg-6 m-b-16">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Recherche</mat-label>
+            <mat-label>Search</mat-label>
             <input
               matInput
               [(ngModel)]="searchTerm"
-              placeholder="Salle, équipement, commentaire, identifiant..."
+              placeholder="Room, equipment, comment, identifier..."
             />
             <i-tabler matSuffix name="search" class="icon-18 text-muted"></i-tabler>
           </mat-form-field>
         </div>
         <div class="col-12 col-md-6 col-lg-3 m-b-16">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Filtre</mat-label>
+            <mat-label>Filter</mat-label>
             <mat-select [(ngModel)]="statusFilter">
-              <mat-option value="ALL">Tout afficher</mat-option>
-              <mat-option value="PENDING">En attente</mat-option>
-              <mat-option value="APPROVED">Approuvées</mat-option>
-              <mat-option value="MODIFICATION_REQUESTED">Modification requise</mat-option>
-              <mat-option value="ACTIVE">En cours</mat-option>
-              <mat-option value="UPCOMING">À venir</mat-option>
-              <mat-option value="COMPLETED">Terminées</mat-option>
+              <mat-option value="ALL">Show all</mat-option>
+              <mat-option value="PENDING">Pending</mat-option>
+              <mat-option value="APPROVED">Approved</mat-option>
+              <mat-option value="MODIFICATION_REQUESTED">Needs changes</mat-option>
+              <mat-option value="ACTIVE">Active</mat-option>
+              <mat-option value="UPCOMING">Upcoming</mat-option>
+              <mat-option value="COMPLETED">Completed</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
         <div class="col-12 col-md-6 col-lg-3 m-b-16">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Tri</mat-label>
+            <mat-label>Sort</mat-label>
             <mat-select [(ngModel)]="sortMode">
-              <mat-option value="RECENT">Plus récentes</mat-option>
-              <mat-option value="OLDEST">Plus anciennes</mat-option>
-              <mat-option value="STATUS">Par priorité</mat-option>
+              <mat-option value="RECENT">Most recent</mat-option>
+              <mat-option value="OLDEST">Oldest first</mat-option>
+              <mat-option value="STATUS">By priority</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
@@ -92,7 +84,7 @@
     <div class="reservations-timeline__item" *ngFor="let reservation of filteredReservations">
       <div class="reservations-timeline__dot"></div>
 
-      <mat-card class="cardWithShadow theme-card reservations-card">
+      <mat-card class="cardWithShadow theme-card reservations-card emna-card">
         <mat-card-content class="p-24">
           <div class="reservations-card__head">
             <div>
@@ -101,9 +93,9 @@
                 <span [class]="getLiveStateClass(reservation)">{{ getLiveStateLabel(reservation) }}</span>
               </div>
               <h3 class="m-t-16 m-b-8">
-                {{ reservation.room?.name || 'Sans salle' }}
+                {{ reservation.room?.name || 'No room' }}
                 <span class="text-muted" *ngIf="reservation.equipments?.length > 0">
-                  + {{ reservation.equipments.length }} équipement(s)
+                  + {{ reservation.equipments.length }} equipment item(s)
                 </span>
               </h3>
               <p class="text-muted m-0">{{ getTimeHint(reservation) }}</p>
@@ -112,9 +104,10 @@
             <button
               mat-stroked-button
               color="warn"
+              class="emna-primary-action"
               *ngIf="canCancel(reservation)"
               (click)="cancelReservation(reservation.id)">
-              Annuler
+              Cancel
             </button>
           </div>
 
@@ -122,7 +115,7 @@
             <div class="reservations-meta__item">
               <i-tabler name="calendar-event" class="icon-18 text-primary"></i-tabler>
               <div>
-                <strong>Créneau</strong>
+                <strong>Time slot</strong>
                 <div>{{ reservation.startTime | date:'dd/MM/yyyy HH:mm' }} - {{ reservation.endTime | date:'HH:mm' }}</div>
               </div>
             </div>
@@ -130,7 +123,7 @@
             <div class="reservations-meta__item" *ngIf="reservation.room">
               <i-tabler name="door" class="icon-18 text-primary"></i-tabler>
               <div>
-                <strong>Salle</strong>
+                <strong>Room</strong>
                 <div>{{ reservation.room.name }}</div>
               </div>
             </div>
@@ -138,17 +131,17 @@
             <div class="reservations-meta__item" *ngIf="reservation.equipments?.length > 0">
               <i-tabler name="device-desktop" class="icon-18 text-primary"></i-tabler>
               <div>
-                <strong>Équipements</strong>
+                <strong>Equipment</strong>
                 <div>{{ getEquipmentsLabel(reservation) }}</div>
               </div>
             </div>
           </div>
 
           <div class="validation-box m-t-20" *ngIf="reservation.validatedBy || reservation.validationComment">
-            <div class="validation-box__title">Retour de validation</div>
+            <div class="validation-box__title">Validation feedback</div>
             <p class="m-b-8 text-muted" *ngIf="reservation.validatedBy">
-              Traité par <strong>{{ reservation.validatedBy }}</strong>
-              <span *ngIf="reservation.validatedAt"> le {{ reservation.validatedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+              Processed by <strong>{{ reservation.validatedBy }}</strong>
+              <span *ngIf="reservation.validatedAt"> on {{ reservation.validatedAt | date:'dd/MM/yyyy HH:mm' }}</span>
             </p>
             <p class="m-0" *ngIf="reservation.validationComment">"{{ reservation.validationComment }}"</p>
           </div>
@@ -158,11 +151,11 @@
   </div>
 
   <ng-template #emptyState>
-    <mat-card class="cardWithShadow theme-card empty-card">
+    <mat-card class="cardWithShadow theme-card empty-card emna-card">
       <mat-card-content class="p-40 text-center">
         <i-tabler name="calendar-off" class="icon-48 text-muted"></i-tabler>
-        <h4 class="m-t-16 m-b-8">Aucune réservation trouvée</h4>
-        <p class="text-muted m-0">Essaie un autre filtre ou crée une nouvelle réservation.</p>
+        <h4 class="m-t-16 m-b-8">No reservations found</h4>
+        <p class="text-muted m-0">Try another filter or create a new reservation.</p>
       </mat-card-content>
     </mat-card>
   </ng-template>

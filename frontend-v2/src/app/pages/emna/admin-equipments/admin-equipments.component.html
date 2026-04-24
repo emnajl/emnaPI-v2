@@ -1,66 +1,58 @@
-<div class="equipments-page">
-  <mat-card class="cardWithShadow theme-card hero-card m-b-24">
+<div class="equipments-page emna-page">
+  <mat-card class="cardWithShadow theme-card hero-card emna-hero emna-hero--warm m-b-24">
     <mat-card-content class="p-24">
-      <div class="hero-head">
+      <div class="hero-head emna-hero__head">
         <div>
-          <p class="hero-kicker m-0">Gestion des équipements</p>
-          <h2 class="mat-subtitle-2 f-s-24 f-w-600 m-b-8 m-t-8">Administration du parc matériel</h2>
-          <p class="text-muted m-0">Suivi des équipements, sensibilité, maintenance et disponibilité à la réservation.</p>
+          <p class="hero-kicker emna-kicker m-0">Equipment operations</p>
+          <h2 class="emna-title">Asset administration</h2>
+          <p class="emna-subtitle">Track equipment, sensitivity, maintenance and booking availability.</p>
         </div>
-        <button mat-stroked-button color="primary" (click)="resetForm()">
+        <button mat-stroked-button color="primary" class="emna-primary-action" (click)="resetForm()">
           <i-tabler name="plus" class="icon-18 m-r-8"></i-tabler>
-          Nouveau matériel
+          New equipment
         </button>
       </div>
 
-      <div class="row m-t-24">
-        <div class="col-sm-6 col-xl-3 m-b-16">
-          <mat-card class="mini-stat mini-stat--primary">
-            <mat-card-content class="p-16">
-              <div class="mini-stat__label">Équipements</div>
-              <div class="mini-stat__value">{{ stats.total }}</div>
-            </mat-card-content>
-          </mat-card>
-        </div>
-        <div class="col-sm-6 col-xl-3 m-b-16">
-          <mat-card class="mini-stat mini-stat--success">
-            <mat-card-content class="p-16">
-              <div class="mini-stat__label">Disponibles</div>
-              <div class="mini-stat__value">{{ stats.available }}</div>
-            </mat-card-content>
-          </mat-card>
-        </div>
-        <div class="col-sm-6 col-xl-3 m-b-16">
-          <mat-card class="mini-stat mini-stat--warning">
-            <mat-card-content class="p-16">
-              <div class="mini-stat__label">Maintenance</div>
-              <div class="mini-stat__value">{{ stats.maintenance }}</div>
-            </mat-card-content>
-          </mat-card>
-        </div>
-        <div class="col-sm-6 col-xl-3 m-b-16">
-          <mat-card class="mini-stat mini-stat--danger">
-            <mat-card-content class="p-16">
-              <div class="mini-stat__label">Sensibles</div>
-              <div class="mini-stat__value">{{ stats.sensitive }}</div>
-            </mat-card-content>
-          </mat-card>
-        </div>
+      <div class="emna-kpi-grid m-t-24">
+        <mat-card class="mini-stat mini-stat--primary emna-kpi">
+          <mat-card-content class="p-16">
+            <div class="mini-stat__label emna-kpi__label">Equipment</div>
+            <div class="mini-stat__value emna-kpi__value">{{ stats.total }}</div>
+          </mat-card-content>
+        </mat-card>
+        <mat-card class="mini-stat mini-stat--success emna-kpi emna-kpi--green">
+          <mat-card-content class="p-16">
+            <div class="mini-stat__label emna-kpi__label">Available</div>
+            <div class="mini-stat__value emna-kpi__value">{{ stats.available }}</div>
+          </mat-card-content>
+        </mat-card>
+        <mat-card class="mini-stat mini-stat--warning emna-kpi emna-kpi--orange">
+          <mat-card-content class="p-16">
+            <div class="mini-stat__label emna-kpi__label">Maintenance</div>
+            <div class="mini-stat__value emna-kpi__value">{{ stats.maintenance }}</div>
+          </mat-card-content>
+        </mat-card>
+        <mat-card class="mini-stat mini-stat--danger emna-kpi emna-kpi--red">
+          <mat-card-content class="p-16">
+            <div class="mini-stat__label emna-kpi__label">Sensitive</div>
+            <div class="mini-stat__value emna-kpi__value">{{ stats.sensitive }}</div>
+          </mat-card-content>
+        </mat-card>
       </div>
 
-      <div *ngIf="message" class="m-t-8 p-16 border-radius-8 f-w-500"
-           [ngClass]="message.includes('Impossible') || message.includes('Erreur') ? 'bg-light-error text-error' : 'bg-light-success text-success'">
+      <div *ngIf="message" class="m-t-16 p-16 border-radius-8 f-w-500"
+           [ngClass]="message.includes('Unable') || message.includes('Error') ? 'bg-light-error text-error' : 'bg-light-success text-success'">
         {{ message }}
       </div>
     </mat-card-content>
   </mat-card>
 
-  <mat-card class="cardWithShadow theme-card section-card m-b-24">
+  <mat-card class="cardWithShadow theme-card section-card emna-card m-b-24">
     <mat-card-content class="p-24">
-      <div class="section-head m-b-20">
+      <div class="section-head emna-section-head m-b-20">
         <div>
-          <p class="section-kicker m-0">Formulaire</p>
-          <h3 class="m-b-0 m-t-8">{{ isEditing ? 'Modifier un équipement' : 'Ajouter un nouveau matériel' }}</h3>
+          <p class="section-kicker emna-kicker m-0">Form</p>
+          <h3 class="m-b-0 m-t-8">{{ isEditing ? 'Edit equipment' : 'Add new equipment' }}</h3>
         </div>
       </div>
 
@@ -68,7 +60,7 @@
         <div class="row">
           <div class="col-12 col-md-6 m-b-16">
             <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Nom du matériel</mat-label>
+              <mat-label>Equipment name</mat-label>
               <input matInput [(ngModel)]="eqForm.name" name="name" required>
             </mat-form-field>
           </div>
@@ -82,18 +74,18 @@
 
           <div class="col-12 col-md-4 m-b-16">
             <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Référence interne</mat-label>
+              <mat-label>Internal reference</mat-label>
               <input matInput [(ngModel)]="eqForm.reference" name="reference">
             </mat-form-field>
           </div>
 
           <div class="col-12 col-md-4 m-b-16">
             <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Statut</mat-label>
+              <mat-label>Status</mat-label>
               <mat-select [(ngModel)]="eqForm.status" name="status">
-                <mat-option value="AVAILABLE">Disponible</mat-option>
-                <mat-option value="MAINTENANCE">En maintenance</mat-option>
-                <mat-option value="UNAVAILABLE">Indisponible</mat-option>
+                <mat-option value="AVAILABLE">Available</mat-option>
+                <mat-option value="MAINTENANCE">Maintenance</mat-option>
+                <mat-option value="UNAVAILABLE">Unavailable</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
@@ -101,19 +93,19 @@
           <div class="col-12 col-md-4 m-b-16 toggle-col">
             <div class="toggle-box">
               <div>
-                <div class="toggle-title">Matériel sensible</div>
-                <div class="toggle-help">Nécessite une validation admin lors de la réservation</div>
+                <div class="toggle-title">Sensitive equipment</div>
+                <div class="toggle-help">Requires admin validation during booking</div>
               </div>
               <mat-slide-toggle [(ngModel)]="eqForm.sensitive" name="sensitive" color="warn"></mat-slide-toggle>
             </div>
           </div>
 
           <div class="col-12 action-row">
-            <button mat-flat-button color="primary" type="submit" class="primary-action">
-              {{ isEditing ? 'Mettre à jour' : 'Enregistrer' }}
+            <button mat-flat-button color="primary" type="submit" class="primary-action emna-primary-action">
+              {{ isEditing ? 'Update' : 'Save' }}
             </button>
-            <button mat-stroked-button color="warn" type="button" *ngIf="isEditing" (click)="resetForm()">
-              Annuler
+            <button mat-stroked-button color="warn" type="button" class="emna-primary-action" *ngIf="isEditing" (click)="resetForm()">
+              Cancel
             </button>
           </div>
         </div>
@@ -121,12 +113,12 @@
     </mat-card-content>
   </mat-card>
 
-  <mat-card class="cardWithShadow theme-card section-card">
+  <mat-card class="cardWithShadow theme-card section-card emna-table-card">
     <mat-card-content class="p-24">
-      <div class="section-head m-b-20">
+      <div class="section-head emna-section-head m-b-20">
         <div>
-          <p class="section-kicker m-0">Inventaire</p>
-          <h3 class="m-b-0 m-t-8">Liste des équipements</h3>
+          <p class="section-kicker emna-kicker m-0">Inventory</p>
+          <h3 class="m-b-0 m-t-8">Equipment list</h3>
         </div>
       </div>
 
@@ -138,31 +130,31 @@
           </ng-container>
 
           <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef>Libellé</th>
+            <th mat-header-cell *matHeaderCellDef>Label</th>
             <td mat-cell *matCellDef="let eq" class="f-w-600">{{ eq.name }}</td>
           </ng-container>
 
           <ng-container matColumnDef="type">
-            <th mat-header-cell *matHeaderCellDef>Réf. et type</th>
+            <th mat-header-cell *matHeaderCellDef>Reference and type</th>
             <td mat-cell *matCellDef="let eq">
-              {{ eq.type || 'Non défini' }}<br>
-              <span class="text-muted f-s-12">Réf: {{ eq.reference || 'Sans référence' }}</span>
+              {{ eq.type || 'Not defined' }}<br>
+              <span class="text-muted f-s-12">Ref: {{ eq.reference || 'No reference' }}</span>
             </td>
           </ng-container>
 
           <ng-container matColumnDef="sensitive">
-            <th mat-header-cell *matHeaderCellDef>Sensibilité</th>
+            <th mat-header-cell *matHeaderCellDef>Sensitivity</th>
             <td mat-cell *matCellDef="let eq">
               <span class="sensibility-badge sensibility-badge--danger" *ngIf="eq.sensitive">
                 <i-tabler name="alert-circle" class="icon-16 m-r-4"></i-tabler>
-                Sensible
+                Sensitive
               </span>
               <span class="sensibility-badge sensibility-badge--muted" *ngIf="!eq.sensitive">Standard</span>
             </td>
           </ng-container>
 
           <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef>Statut</th>
+            <th mat-header-cell *matHeaderCellDef>Status</th>
             <td mat-cell *matCellDef="let eq">
               <span class="status-badge"
                     [ngClass]="{
@@ -170,7 +162,7 @@
                       'status-badge--warning': eq.status === 'MAINTENANCE',
                       'status-badge--danger': eq.status === 'UNAVAILABLE'
                     }">
-                {{ eq.status === 'AVAILABLE' ? 'Disponible' : eq.status === 'UNAVAILABLE' ? 'Indisponible' : 'Maintenance' }}
+                {{ eq.status === 'AVAILABLE' ? 'Available' : eq.status === 'UNAVAILABLE' ? 'Unavailable' : 'Maintenance' }}
               </span>
             </td>
           </ng-container>
@@ -178,10 +170,10 @@
           <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef class="text-right">Actions</th>
             <td mat-cell *matCellDef="let eq" class="text-right">
-              <button mat-icon-button color="primary" (click)="editEquipment(eq)" matTooltip="Éditer">
+              <button mat-icon-button color="primary" (click)="editEquipment(eq)" matTooltip="Edit">
                 <i-tabler name="edit" class="icon-18"></i-tabler>
               </button>
-              <button mat-icon-button color="warn" (click)="deleteEquipment(eq.id)" matTooltip="Supprimer">
+              <button mat-icon-button color="warn" (click)="deleteEquipment(eq.id)" matTooltip="Delete">
                 <i-tabler name="trash" class="icon-18"></i-tabler>
               </button>
             </td>
@@ -192,7 +184,7 @@
 
           <tr class="mat-row" *matNoDataRow>
             <td class="mat-cell p-24 text-center f-w-500 text-muted" colspan="6">
-              Aucun équipement enregistré dans le système.
+              No equipment is registered in the system.
             </td>
           </tr>
         </table>

@@ -1,66 +1,58 @@
-<div class="rooms-page">
-  <mat-card class="cardWithShadow theme-card hero-card m-b-24">
+<div class="rooms-page emna-page">
+  <mat-card class="cardWithShadow theme-card hero-card emna-hero m-b-24">
     <mat-card-content class="p-24">
-      <div class="hero-head">
+      <div class="hero-head emna-hero__head">
         <div>
-          <p class="hero-kicker m-0">Gestion des salles</p>
-          <h2 class="mat-subtitle-2 f-s-24 f-w-600 m-b-8 m-t-8">Administration des espaces</h2>
-          <p class="text-muted m-0">Création, mise à jour, maintenance et suivi des salles de l’établissement.</p>
+          <p class="hero-kicker emna-kicker m-0">Room operations</p>
+          <h2 class="emna-title">Space administration</h2>
+          <p class="emna-subtitle">Create, update, maintain and monitor all institutional rooms.</p>
         </div>
-        <button mat-stroked-button color="primary" (click)="resetForm()">
+        <button mat-stroked-button color="primary" class="emna-primary-action" (click)="resetForm()">
           <i-tabler name="plus" class="icon-18 m-r-8"></i-tabler>
-          Nouvelle salle
+          New room
         </button>
       </div>
 
-      <div class="row m-t-24">
-        <div class="col-sm-6 col-xl-3 m-b-16">
-          <mat-card class="mini-stat mini-stat--primary">
-            <mat-card-content class="p-16">
-              <div class="mini-stat__label">Salles</div>
-              <div class="mini-stat__value">{{ stats.total }}</div>
-            </mat-card-content>
-          </mat-card>
-        </div>
-        <div class="col-sm-6 col-xl-3 m-b-16">
-          <mat-card class="mini-stat mini-stat--success">
-            <mat-card-content class="p-16">
-              <div class="mini-stat__label">Disponibles</div>
-              <div class="mini-stat__value">{{ stats.available }}</div>
-            </mat-card-content>
-          </mat-card>
-        </div>
-        <div class="col-sm-6 col-xl-3 m-b-16">
-          <mat-card class="mini-stat mini-stat--warning">
-            <mat-card-content class="p-16">
-              <div class="mini-stat__label">Maintenance</div>
-              <div class="mini-stat__value">{{ stats.maintenance }}</div>
-            </mat-card-content>
-          </mat-card>
-        </div>
-        <div class="col-sm-6 col-xl-3 m-b-16">
-          <mat-card class="mini-stat mini-stat--info">
-            <mat-card-content class="p-16">
-              <div class="mini-stat__label">Grandes salles</div>
-              <div class="mini-stat__value">{{ stats.large }}</div>
-            </mat-card-content>
-          </mat-card>
-        </div>
+      <div class="emna-kpi-grid m-t-24">
+        <mat-card class="mini-stat mini-stat--primary emna-kpi">
+          <mat-card-content class="p-16">
+            <div class="mini-stat__label emna-kpi__label">Rooms</div>
+            <div class="mini-stat__value emna-kpi__value">{{ stats.total }}</div>
+          </mat-card-content>
+        </mat-card>
+        <mat-card class="mini-stat mini-stat--success emna-kpi emna-kpi--green">
+          <mat-card-content class="p-16">
+            <div class="mini-stat__label emna-kpi__label">Available</div>
+            <div class="mini-stat__value emna-kpi__value">{{ stats.available }}</div>
+          </mat-card-content>
+        </mat-card>
+        <mat-card class="mini-stat mini-stat--warning emna-kpi emna-kpi--orange">
+          <mat-card-content class="p-16">
+            <div class="mini-stat__label emna-kpi__label">Maintenance</div>
+            <div class="mini-stat__value emna-kpi__value">{{ stats.maintenance }}</div>
+          </mat-card-content>
+        </mat-card>
+        <mat-card class="mini-stat mini-stat--info emna-kpi emna-kpi--cyan">
+          <mat-card-content class="p-16">
+            <div class="mini-stat__label emna-kpi__label">Large rooms</div>
+            <div class="mini-stat__value emna-kpi__value">{{ stats.large }}</div>
+          </mat-card-content>
+        </mat-card>
       </div>
 
-      <div *ngIf="message" class="m-t-8 p-16 border-radius-8 f-w-500"
-           [ngClass]="message.includes('Impossible') || message.includes('Erreur') ? 'bg-light-error text-error' : 'bg-light-success text-success'">
+      <div *ngIf="message" class="m-t-16 p-16 border-radius-8 f-w-500"
+           [ngClass]="message.includes('Unable') || message.includes('Error') ? 'bg-light-error text-error' : 'bg-light-success text-success'">
         {{ message }}
       </div>
     </mat-card-content>
   </mat-card>
 
-  <mat-card class="cardWithShadow theme-card section-card m-b-24">
+  <mat-card class="cardWithShadow theme-card section-card emna-card m-b-24">
     <mat-card-content class="p-24">
-      <div class="section-head m-b-20">
+      <div class="section-head emna-section-head m-b-20">
         <div>
-          <p class="section-kicker m-0">Formulaire</p>
-          <h3 class="m-b-0 m-t-8">{{ isEditing ? 'Modifier une salle' : 'Ajouter une nouvelle salle' }}</h3>
+          <p class="section-kicker emna-kicker m-0">Form</p>
+          <h3 class="m-b-0 m-t-8">{{ isEditing ? 'Edit room' : 'Add a new room' }}</h3>
         </div>
       </div>
 
@@ -68,42 +60,42 @@
         <div class="row">
           <div class="col-12 col-md-6 m-b-16">
             <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Nom ou numéro</mat-label>
+              <mat-label>Name or number</mat-label>
               <input matInput [(ngModel)]="roomForm.name" name="name" required>
             </mat-form-field>
           </div>
 
           <div class="col-12 col-md-3 m-b-16">
             <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Capacité</mat-label>
+              <mat-label>Capacity</mat-label>
               <input matInput type="number" [(ngModel)]="roomForm.capacity" name="capacity" required>
             </mat-form-field>
           </div>
 
           <div class="col-12 col-md-3 m-b-16">
             <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Statut</mat-label>
+              <mat-label>Status</mat-label>
               <mat-select [(ngModel)]="roomForm.status" name="status">
-                <mat-option value="AVAILABLE">Disponible</mat-option>
-                <mat-option value="MAINTENANCE">En maintenance</mat-option>
-                <mat-option value="UNAVAILABLE">Indisponible</mat-option>
+                <mat-option value="AVAILABLE">Available</mat-option>
+                <mat-option value="MAINTENANCE">Maintenance</mat-option>
+                <mat-option value="UNAVAILABLE">Unavailable</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
 
           <div class="col-12 m-b-16">
             <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Bâtiment / emplacement</mat-label>
+              <mat-label>Building / location</mat-label>
               <input matInput [(ngModel)]="roomForm.location" name="location">
             </mat-form-field>
           </div>
 
           <div class="col-12 action-row">
-            <button mat-flat-button color="primary" type="submit" class="primary-action">
-              {{ isEditing ? 'Enregistrer les modifications' : 'Créer la salle' }}
+            <button mat-flat-button color="primary" type="submit" class="primary-action emna-primary-action">
+              {{ isEditing ? 'Save changes' : 'Create room' }}
             </button>
-            <button mat-stroked-button color="warn" type="button" *ngIf="isEditing" (click)="resetForm()">
-              Annuler
+            <button mat-stroked-button color="warn" type="button" class="emna-primary-action" *ngIf="isEditing" (click)="resetForm()">
+              Cancel
             </button>
           </div>
         </div>
@@ -111,42 +103,42 @@
     </mat-card-content>
   </mat-card>
 
-  <mat-card class="cardWithShadow theme-card section-card">
+  <mat-card class="cardWithShadow theme-card section-card emna-table-card">
     <mat-card-content class="p-24">
-      <div class="section-head m-b-20">
+      <div class="section-head emna-section-head m-b-20">
         <div>
-          <p class="section-kicker m-0">Inventaire</p>
-          <h3 class="m-b-0 m-t-8">Liste des salles</h3>
+          <p class="section-kicker emna-kicker m-0">Inventory</p>
+          <h3 class="m-b-0 m-t-8">Room list</h3>
         </div>
       </div>
 
       <div class="table-responsive">
         <table mat-table [dataSource]="rooms" class="w-100 admin-table">
           <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef class="p-l-0">Identifiant</th>
+            <th mat-header-cell *matHeaderCellDef class="p-l-0">Identifier</th>
             <td mat-cell *matCellDef="let rm" class="p-l-0 text-muted">#{{ rm.id }}</td>
           </ng-container>
 
           <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef>Nom de salle</th>
+            <th mat-header-cell *matHeaderCellDef>Room name</th>
             <td mat-cell *matCellDef="let rm" class="f-w-600">{{ rm.name }}</td>
           </ng-container>
 
           <ng-container matColumnDef="capacity">
-            <th mat-header-cell *matHeaderCellDef>Capacité</th>
+            <th mat-header-cell *matHeaderCellDef>Capacity</th>
             <td mat-cell *matCellDef="let rm">
               {{ rm.capacity }}
-              <span *ngIf="rm.capacity >= 20" class="sub-tag">Grande</span>
+              <span *ngIf="rm.capacity >= 20" class="sub-tag">Large</span>
             </td>
           </ng-container>
 
           <ng-container matColumnDef="location">
-            <th mat-header-cell *matHeaderCellDef>Emplacement</th>
+            <th mat-header-cell *matHeaderCellDef>Location</th>
             <td mat-cell *matCellDef="let rm">{{ rm.location }}</td>
           </ng-container>
 
           <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef>Statut</th>
+            <th mat-header-cell *matHeaderCellDef>Status</th>
             <td mat-cell *matCellDef="let rm">
               <span class="status-badge"
                     [ngClass]="{
@@ -154,7 +146,7 @@
                       'status-badge--warning': rm.status === 'MAINTENANCE',
                       'status-badge--danger': rm.status === 'UNAVAILABLE'
                     }">
-                {{ rm.status === 'AVAILABLE' ? 'Disponible' : rm.status === 'UNAVAILABLE' ? 'Indisponible' : 'Maintenance' }}
+                {{ rm.status === 'AVAILABLE' ? 'Available' : rm.status === 'UNAVAILABLE' ? 'Unavailable' : 'Maintenance' }}
               </span>
             </td>
           </ng-container>
@@ -162,10 +154,10 @@
           <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef class="text-right">Actions</th>
             <td mat-cell *matCellDef="let rm" class="text-right">
-              <button mat-icon-button color="primary" (click)="editRoom(rm)" matTooltip="Éditer">
+              <button mat-icon-button color="primary" (click)="editRoom(rm)" matTooltip="Edit">
                 <i-tabler name="edit" class="icon-18"></i-tabler>
               </button>
-              <button mat-icon-button color="warn" (click)="deleteRoom(rm.id)" matTooltip="Supprimer">
+              <button mat-icon-button color="warn" (click)="deleteRoom(rm.id)" matTooltip="Delete">
                 <i-tabler name="trash" class="icon-18"></i-tabler>
               </button>
             </td>
@@ -176,7 +168,7 @@
 
           <tr class="mat-row" *matNoDataRow>
             <td class="mat-cell p-24 text-center f-w-500 text-muted" colspan="6">
-              Aucune salle n'existe dans la base de données.
+              No rooms exist in the database.
             </td>
           </tr>
         </table>

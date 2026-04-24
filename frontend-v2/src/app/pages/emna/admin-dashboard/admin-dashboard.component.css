@@ -1,89 +1,532 @@
+:host {
+  display: block;
+}
+
+.dashboard-page {
+  --dash-ink: #07111f;
+  --dash-muted: #64748b;
+  --dash-line: rgba(148, 163, 184, 0.22);
+  --dash-blue: #2563eb;
+  --dash-green: #10b981;
+  --dash-orange: #f97316;
+  --dash-cyan: #06b6d4;
+  padding-bottom: 18px;
+}
+
+.dashboard-shell {
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.dashboard-hero,
+.kpi-card,
+.insight-card,
+.chart-card,
+.status-card,
+.health-card,
+.activity-card {
+  border: 1px solid var(--dash-line);
+  border-radius: 28px;
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+}
+
 .dashboard-hero {
+  position: relative;
   background:
-    radial-gradient(circle at top right, rgba(37, 99, 235, 0.12), transparent 28%),
-    radial-gradient(circle at left bottom, rgba(16, 185, 129, 0.1), transparent 26%),
-    #fff;
+    linear-gradient(135deg, rgba(248, 250, 252, 0.92), rgba(255, 255, 255, 0.8)),
+    radial-gradient(circle at 85% 8%, rgba(37, 99, 235, 0.24), transparent 30%),
+    radial-gradient(circle at 18% 100%, rgba(16, 185, 129, 0.2), transparent 28%),
+    #ffffff;
 }
 
-.dashboard-hero__head {
+.dashboard-hero::after {
+  content: '';
+  position: absolute;
+  inset: auto -80px -120px auto;
+  width: 320px;
+  height: 320px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.08);
+  filter: blur(4px);
+}
+
+.dashboard-hero__grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 28px;
+  align-items: stretch;
+}
+
+.dashboard-hero__copy {
   display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 250px;
 }
 
-.dashboard-kicker {
+.dashboard-kicker,
+.chart-kicker,
+.insight-card__label {
+  display: inline-flex;
+  width: fit-content;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
-  font-size: 12px;
-  font-weight: 700;
-  color: #2563eb;
+  letter-spacing: 0.16em;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--dash-blue);
+}
+
+.dashboard-hero h1 {
+  max-width: 680px;
+  margin: 14px 0 12px;
+  color: var(--dash-ink);
+  font-size: clamp(32px, 5vw, 56px);
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+  font-weight: 900;
+}
+
+.dashboard-hero p,
+.chart-head p,
+.kpi-card p,
+.insight-card p,
+.health-item span,
+.activity-item small,
+.empty-state p {
+  color: var(--dash-muted);
+}
+
+.dashboard-hero p {
+  max-width: 720px;
+  margin: 0;
+  font-size: 16px;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.hero-actions__primary {
+  background: var(--dash-blue);
+  color: #fff;
+  border-radius: 999px;
+  min-height: 46px;
+  padding: 0 22px;
+}
+
+.hero-actions__secondary {
+  border-radius: 999px;
+  min-height: 46px;
+  padding: 0 22px;
+}
+
+.dashboard-hero__panel {
+  display: grid;
+  gap: 16px;
+  padding: 18px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.76);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(16px);
 }
 
 .period-switch {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 6px;
+  border-radius: 999px;
+  background: #eef2ff;
+}
+
+.period-switch button {
+  min-width: 0;
+  border-radius: 999px;
+  color: #334155;
+  font-weight: 800;
 }
 
 .period-switch__active {
-  background: #2563eb;
-  color: #fff;
-  border-color: #2563eb;
+  background: var(--dash-blue);
+  color: #fff !important;
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.28);
+}
+
+.hero-metric,
+.hero-signal {
+  padding: 18px;
+  border-radius: 22px;
+  background: #fff;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+}
+
+.hero-metric__label,
+.hero-signal span {
+  display: block;
+  color: var(--dash-muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+}
+
+.hero-metric strong,
+.hero-signal strong {
+  display: block;
+  margin: 10px 0;
+  color: var(--dash-ink);
+  font-size: 34px;
+  font-weight: 900;
+}
+
+.hero-signal small {
+  color: var(--dash-muted);
 }
 
 .period-chip {
+  position: absolute;
+  left: 28px;
+  bottom: -14px;
+  display: inline-flex;
+  padding: 9px 14px;
+  border-radius: 999px;
+  background: #111827;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.18);
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.kpi-card {
+  position: relative;
+  min-height: 178px;
+  color: var(--dash-ink);
+  background: #fff;
+}
+
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.kpi-card--blue::before {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.15), transparent 58%);
+}
+
+.kpi-card--green::before {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.16), transparent 58%);
+}
+
+.kpi-card--orange::before {
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.16), transparent 58%);
+}
+
+.kpi-card--cyan::before {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.16), transparent 58%);
+}
+
+.kpi-card mat-card-content {
+  position: relative;
+  z-index: 1;
+  padding: 22px;
+}
+
+.kpi-card__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.kpi-card strong {
+  display: block;
+  margin-top: 22px;
+  font-size: 38px;
+  line-height: 1;
+  font-weight: 950;
+  letter-spacing: -0.04em;
+}
+
+.kpi-card p,
+.insight-card p {
+  margin: 10px 0 0;
+}
+
+.insight-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.insight-card {
+  background: linear-gradient(135deg, #fff, #f8fafc);
+}
+
+.insight-card mat-card-content {
+  padding: 22px;
+}
+
+.insight-card strong {
+  display: block;
+  margin-top: 10px;
+  color: var(--dash-ink);
+  font-size: 28px;
+  font-weight: 900;
+}
+
+.dashboard-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 18px;
+  align-items: start;
+}
+
+.dashboard-main,
+.dashboard-side {
+  display: grid;
+  gap: 18px;
+}
+
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.chart-card,
+.status-card,
+.health-card,
+.activity-card {
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.chart-card--featured {
+  background:
+    radial-gradient(circle at 92% 12%, rgba(37, 99, 235, 0.12), transparent 26%),
+    #fff;
+}
+
+.chart-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.chart-head--compact {
+  align-items: center;
+}
+
+.chart-head h3 {
+  margin: 6px 0 4px;
+  color: var(--dash-ink);
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+.chart-head p {
+  margin: 0;
+}
+
+.chart-badge {
   display: inline-flex;
   align-items: center;
-  padding: 7px 12px;
+  white-space: nowrap;
+  padding: 8px 12px;
   border-radius: 999px;
   background: #eff6ff;
   color: #1d4ed8;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 900;
 }
 
-.stat-card {
-  border: 1px solid rgba(148, 163, 184, 0.16);
+.chart-badge--orange {
+  background: #fff7ed;
+  color: #c2410c;
 }
 
-.stat-card__label {
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: #64748b;
-  font-weight: 700;
+.chart-badge--green {
+  background: #ecfdf5;
+  color: #047857;
 }
 
-.stat-card__value {
-  font-size: 30px;
-  font-weight: 700;
-  margin: 12px 0 6px;
+.health-list,
+.activity-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
 }
 
-.stat-card--primary {
-  background: rgba(59, 130, 246, 0.08);
-}
-
-.stat-card--success {
-  background: rgba(16, 185, 129, 0.08);
-}
-
-.stat-card--warning {
-  background: rgba(245, 158, 11, 0.09);
-}
-
-.stat-card--info {
-  background: rgba(14, 165, 233, 0.08);
-}
-
-.chart-card {
-  border: 1px solid rgba(148, 163, 184, 0.14);
-}
-
-.chart-card__meta {
+.health-item {
   display: flex;
   justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+  padding: 14px;
+  border-radius: 18px;
+  background: #f8fafc;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+}
+
+.health-item strong,
+.activity-item strong {
+  display: block;
+  color: var(--dash-ink);
+}
+
+.health-value {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 54px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  font-weight: 900;
+}
+
+.health-value--good {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.health-value--warn {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+.activity-item {
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+  border-radius: 18px;
+  background: #f8fafc;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+}
+
+.activity-status {
+  width: fit-content;
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.activity-status--success {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.activity-status--warning {
+  background: #fffbeb;
+  color: #b45309;
+}
+
+.activity-status--danger {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.activity-status--info {
+  background: #eef2ff;
+  color: #4f46e5;
+}
+
+.activity-status--muted {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.empty-state {
+  display: grid;
+  place-items: center;
+  min-height: 150px;
+  color: #94a3b8;
+  text-align: center;
+}
+
+@media (max-width: 1200px) {
+  .dashboard-hero__grid,
+  .dashboard-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-hero__panel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .period-switch {
+    grid-column: 1 / -1;
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-hero,
+  .kpi-card,
+  .insight-card,
+  .chart-card,
+  .status-card,
+  .health-card,
+  .activity-card {
+    border-radius: 22px;
+  }
+
+  .dashboard-hero__copy {
+    min-height: auto;
+  }
+
+  .dashboard-hero__panel,
+  .kpi-grid,
+  .insight-grid,
+  .chart-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .period-switch {
+    grid-template-columns: 1fr;
+    border-radius: 20px;
+  }
+
+  .period-switch button {
+    border-radius: 16px;
+  }
+
+  .chart-head {
+    flex-direction: column;
+  }
+
+  .period-chip {
+    position: static;
+    margin: 12px 0 0 6px;
+  }
 }

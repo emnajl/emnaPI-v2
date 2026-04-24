@@ -1,75 +1,136 @@
 <div class="dashboard-page">
-  <mat-card class="cardWithShadow theme-card dashboard-hero m-b-24">
-    <mat-card-content class="p-24">
-      <div class="dashboard-hero__head">
-        <div>
-          <p class="dashboard-kicker m-0">Pilotage admin</p>
-          <h2 class="mat-subtitle-2 f-s-24 f-w-600 m-b-8 m-t-8">Dashboard analytique</h2>
-          <p class="text-muted m-0">Charge de réservation, pics horaires, répartition des statuts et top ressources par période.</p>
-        </div>
-        <div class="period-switch">
-          <button mat-stroked-button [class.period-switch__active]="period === '7D'" (click)="setPeriod('7D')">7 jours</button>
-          <button mat-stroked-button [class.period-switch__active]="period === '30D'" (click)="setPeriod('30D')">30 jours</button>
-          <button mat-stroked-button [class.period-switch__active]="period === 'ALL'" (click)="setPeriod('ALL')">Global</button>
-        </div>
-      </div>
+  <section class="dashboard-shell">
+    <mat-card class="dashboard-hero">
+      <mat-card-content class="p-24">
+        <div class="dashboard-hero__grid">
+          <div class="dashboard-hero__copy">
+            <span class="dashboard-kicker">Resource command center</span>
+            <h1>Reservation intelligence dashboard</h1>
+            <p>
+              Live workload, approval pressure, peak hours and the most requested rooms or equipment for the selected period.
+            </p>
 
-      <div class="m-t-16">
-        <span class="period-chip">{{ periodLabel }}</span>
-      </div>
-    </mat-card-content>
-  </mat-card>
-
-  <div class="row m-b-24">
-    <div class="col-sm-6 col-xl-3 m-b-16">
-      <mat-card class="cardWithShadow stat-card stat-card--primary">
-        <mat-card-content class="p-20">
-          <div class="stat-card__label">Réservations</div>
-          <div class="stat-card__value">{{ stats.totalReservations }}</div>
-          <div class="text-muted">Volume sur la période</div>
-        </mat-card-content>
-      </mat-card>
-    </div>
-    <div class="col-sm-6 col-xl-3 m-b-16">
-      <mat-card class="cardWithShadow stat-card stat-card--success">
-        <mat-card-content class="p-20">
-          <div class="stat-card__label">Approuvées</div>
-          <div class="stat-card__value">{{ stats.approvedReservations }}</div>
-          <div class="text-muted">Demandes confirmées</div>
-        </mat-card-content>
-      </mat-card>
-    </div>
-    <div class="col-sm-6 col-xl-3 m-b-16">
-      <mat-card class="cardWithShadow stat-card stat-card--warning">
-        <mat-card-content class="p-20">
-          <div class="stat-card__label">À arbitrer</div>
-          <div class="stat-card__value">{{ stats.conflictReservations }}</div>
-          <div class="text-muted">Pending ou modification</div>
-        </mat-card-content>
-      </mat-card>
-    </div>
-    <div class="col-sm-6 col-xl-3 m-b-16">
-      <mat-card class="cardWithShadow stat-card stat-card--info">
-        <mat-card-content class="p-20">
-          <div class="stat-card__label">Pic horaire</div>
-          <div class="stat-card__value">{{ stats.peakHourLabel }}</div>
-          <div class="text-muted">Heure la plus demandée</div>
-        </mat-card-content>
-      </mat-card>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-xl-8 m-b-24">
-      <mat-card class="cardWithShadow theme-card chart-card">
-        <mat-card-header>
-          <mat-card-title class="m-b-0">Charge des réservations</mat-card-title>
-        </mat-card-header>
-        <mat-card-content class="p-24">
-          <div class="chart-card__meta m-b-16">
-            <span class="text-muted">Évolution du nombre de demandes sur la période choisie</span>
-            <strong>{{ stats.occupationRate }}% d’occupation salle</strong>
+            <div class="hero-actions">
+              <button mat-flat-button class="hero-actions__primary" [routerLink]="['/emna/admin-validation']">
+                Review requests
+              </button>
+              <button mat-stroked-button class="hero-actions__secondary" [routerLink]="['/emna/resources']">
+                Open catalog
+              </button>
+            </div>
           </div>
+
+          <div class="dashboard-hero__panel">
+            <div class="period-switch" aria-label="Dashboard period">
+              <button mat-button [class.period-switch__active]="period === '7D'" (click)="setPeriod('7D')">7 days</button>
+              <button mat-button [class.period-switch__active]="period === '30D'" (click)="setPeriod('30D')">30 days</button>
+              <button mat-button [class.period-switch__active]="period === 'ALL'" (click)="setPeriod('ALL')">All time</button>
+            </div>
+
+            <div class="hero-metric">
+              <span class="hero-metric__label">Approval rate</span>
+              <strong>{{ stats.approvalRate }}%</strong>
+              <mat-progress-bar mode="determinate" [value]="stats.approvalRate"></mat-progress-bar>
+            </div>
+
+            <div class="hero-signal">
+              <span>Peak demand</span>
+              <strong>{{ stats.peakHourLabel }}</strong>
+              <small>{{ stats.busiestDayLabel }}</small>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <div class="period-chip">{{ periodLabel }}</div>
+  </section>
+
+  <section class="kpi-grid">
+    <mat-card class="kpi-card kpi-card--blue">
+      <mat-card-content>
+        <div class="kpi-card__top">
+          <span>Total requests</span>
+          <i-tabler name="calendar-stats" class="icon-22"></i-tabler>
+        </div>
+        <strong>{{ stats.totalReservations }}</strong>
+        <p>Reservations created in this period</p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="kpi-card kpi-card--green">
+      <mat-card-content>
+        <div class="kpi-card__top">
+          <span>Approved</span>
+          <i-tabler name="circle-check" class="icon-22"></i-tabler>
+        </div>
+        <strong>{{ stats.approvedReservations }}</strong>
+        <p>{{ stats.approvalRate }}% confirmed by the workflow</p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="kpi-card kpi-card--orange">
+      <mat-card-content>
+        <div class="kpi-card__top">
+          <span>Needs decision</span>
+          <i-tabler name="alert-triangle" class="icon-22"></i-tabler>
+        </div>
+        <strong>{{ stats.conflictReservations }}</strong>
+        <p>{{ stats.pendingRate }}% still pending or requires changes</p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="kpi-card kpi-card--cyan">
+      <mat-card-content>
+        <div class="kpi-card__top">
+          <span>Room usage</span>
+          <i-tabler name="building-community" class="icon-22"></i-tabler>
+        </div>
+        <strong>{{ stats.occupationRate }}%</strong>
+        <p>{{ stats.resourceCoverageRate }}% of resources touched</p>
+      </mat-card-content>
+    </mat-card>
+  </section>
+
+  <section class="insight-grid">
+    <mat-card class="insight-card">
+      <mat-card-content>
+        <span class="insight-card__label">Average duration</span>
+        <strong>{{ stats.averageDurationLabel }}</strong>
+        <p>Helps estimate room turnover and cleaning buffers.</p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="insight-card">
+      <mat-card-content>
+        <span class="insight-card__label">Assets in maintenance</span>
+        <strong>{{ stats.maintenanceCount }}</strong>
+        <p>Rooms and equipment currently unavailable.</p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="insight-card">
+      <mat-card-content>
+        <span class="insight-card__label">Sensitive equipment</span>
+        <strong>{{ stats.sensitiveAssets }}</strong>
+        <p>Items that require tighter validation rules.</p>
+      </mat-card-content>
+    </mat-card>
+  </section>
+
+  <div class="dashboard-layout">
+    <div class="dashboard-main">
+      <mat-card class="chart-card chart-card--featured">
+        <mat-card-content class="p-24">
+          <div class="chart-head">
+            <div>
+              <span class="chart-kicker">Workload trend</span>
+              <h3>Reservation load</h3>
+              <p>Daily request volume for {{ periodLabel.toLowerCase() }}.</p>
+            </div>
+            <span class="chart-badge">{{ stats.totalReservations }} requests</span>
+          </div>
+
           <apx-chart
             *ngIf="loadChart?.series"
             #loadChart
@@ -88,14 +149,78 @@
           </apx-chart>
         </mat-card-content>
       </mat-card>
+
+      <div class="chart-grid">
+        <mat-card class="chart-card">
+          <mat-card-content class="p-24">
+            <div class="chart-head chart-head--compact">
+              <div>
+                <span class="chart-kicker">Hourly pressure</span>
+                <h3>Peak hours</h3>
+              </div>
+              <span class="chart-badge chart-badge--orange">{{ stats.peakHourLabel }}</span>
+            </div>
+
+            <apx-chart
+              *ngIf="hourlyChart?.series"
+              #hourlyChart
+              [series]="hourlyChart.series"
+              [chart]="hourlyChart.chart"
+              [xaxis]="hourlyChart.xaxis"
+              [yaxis]="hourlyChart.yaxis"
+              [stroke]="hourlyChart.stroke"
+              [fill]="hourlyChart.fill"
+              [grid]="hourlyChart.grid"
+              [dataLabels]="hourlyChart.dataLabels"
+              [legend]="hourlyChart.legend"
+              [tooltip]="hourlyChart.tooltip"
+              [plotOptions]="hourlyChart.plotOptions"
+              [colors]="hourlyChart.colors">
+            </apx-chart>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="chart-card">
+          <mat-card-content class="p-24">
+            <div class="chart-head chart-head--compact">
+              <div>
+                <span class="chart-kicker">Top resources</span>
+                <h3>Most requested</h3>
+              </div>
+              <span class="chart-badge chart-badge--green">{{ topResources.length }} tracked</span>
+            </div>
+
+            <apx-chart
+              *ngIf="topResourcesChart?.series"
+              #topChart
+              [series]="topResourcesChart.series"
+              [chart]="topResourcesChart.chart"
+              [xaxis]="topResourcesChart.xaxis"
+              [yaxis]="topResourcesChart.yaxis"
+              [stroke]="topResourcesChart.stroke"
+              [fill]="topResourcesChart.fill"
+              [grid]="topResourcesChart.grid"
+              [dataLabels]="topResourcesChart.dataLabels"
+              [legend]="topResourcesChart.legend"
+              [tooltip]="topResourcesChart.tooltip"
+              [plotOptions]="topResourcesChart.plotOptions"
+              [colors]="topResourcesChart.colors">
+            </apx-chart>
+          </mat-card-content>
+        </mat-card>
+      </div>
     </div>
 
-    <div class="col-xl-4 m-b-24">
-      <mat-card class="cardWithShadow theme-card chart-card h-100">
-        <mat-card-header>
-          <mat-card-title class="m-b-0">Répartition des statuts</mat-card-title>
-        </mat-card-header>
+    <aside class="dashboard-side">
+      <mat-card class="status-card">
         <mat-card-content class="p-24">
+          <div class="chart-head chart-head--compact">
+            <div>
+              <span class="chart-kicker">Decision mix</span>
+              <h3>Status split</h3>
+            </div>
+          </div>
+
           <apx-chart
             *ngIf="statusChart?.series"
             [series]="statusChart.series"
@@ -109,68 +234,47 @@
           </apx-chart>
         </mat-card-content>
       </mat-card>
-    </div>
-  </div>
 
-  <div class="row">
-    <div class="col-xl-6 m-b-24">
-      <mat-card class="cardWithShadow theme-card chart-card">
-        <mat-card-header>
-          <mat-card-title class="m-b-0">Pics horaires</mat-card-title>
-        </mat-card-header>
+      <mat-card class="health-card">
         <mat-card-content class="p-24">
-          <div class="chart-card__meta m-b-16">
-            <span class="text-muted">Concentration des demandes entre 08:00 et 19:00</span>
-            <strong>{{ stats.peakHourLabel }} est le créneau le plus chargé</strong>
+          <span class="chart-kicker">Operational health</span>
+          <div class="health-list">
+            <div class="health-item" *ngFor="let item of healthCards">
+              <div>
+                <strong>{{ item.label }}</strong>
+                <span>{{ item.caption }}</span>
+              </div>
+              <b [class]="item.className">{{ item.value }}</b>
+            </div>
           </div>
-          <apx-chart
-            *ngIf="hourlyChart?.series"
-            #hourlyChart
-            [series]="hourlyChart.series"
-            [chart]="hourlyChart.chart"
-            [xaxis]="hourlyChart.xaxis"
-            [yaxis]="hourlyChart.yaxis"
-            [stroke]="hourlyChart.stroke"
-            [fill]="hourlyChart.fill"
-            [grid]="hourlyChart.grid"
-            [dataLabels]="hourlyChart.dataLabels"
-            [legend]="hourlyChart.legend"
-            [tooltip]="hourlyChart.tooltip"
-            [plotOptions]="hourlyChart.plotOptions"
-            [colors]="hourlyChart.colors">
-          </apx-chart>
         </mat-card-content>
       </mat-card>
-    </div>
 
-    <div class="col-xl-6 m-b-24">
-      <mat-card class="cardWithShadow theme-card chart-card">
-        <mat-card-header>
-          <mat-card-title class="m-b-0">Top ressources</mat-card-title>
-        </mat-card-header>
+      <mat-card class="activity-card">
         <mat-card-content class="p-24">
-          <div class="chart-card__meta m-b-16">
-            <span class="text-muted">Ressources les plus sollicitées sur {{ periodLabel.toLowerCase() }}</span>
-            <strong>{{ topResources.length }} ressource(s) suivie(s)</strong>
+          <div class="chart-head chart-head--compact">
+            <div>
+              <span class="chart-kicker">Latest activity</span>
+              <h3>Recent reservations</h3>
+            </div>
           </div>
-          <apx-chart
-            *ngIf="topResourcesChart?.series"
-            #topChart
-            [series]="topResourcesChart.series"
-            [chart]="topResourcesChart.chart"
-            [xaxis]="topResourcesChart.xaxis"
-            [yaxis]="topResourcesChart.yaxis"
-            [stroke]="topResourcesChart.stroke"
-            [fill]="topResourcesChart.fill"
-            [grid]="topResourcesChart.grid"
-            [dataLabels]="topResourcesChart.dataLabels"
-            [legend]="topResourcesChart.legend"
-            [tooltip]="topResourcesChart.tooltip"
-            [plotOptions]="topResourcesChart.plotOptions"
-            [colors]="topResourcesChart.colors">
-          </apx-chart>
+
+          <div class="activity-list" *ngIf="recentActivity.length; else noActivity">
+            <div class="activity-item" *ngFor="let item of recentActivity">
+              <span [class]="item.statusClass">{{ item.statusLabel }}</span>
+              <strong>{{ item.title }}</strong>
+              <small>{{ item.meta }}</small>
+            </div>
+          </div>
+
+          <ng-template #noActivity>
+            <div class="empty-state">
+              <i-tabler name="calendar-off" class="icon-36"></i-tabler>
+              <p>No activity for this period.</p>
+            </div>
+          </ng-template>
         </mat-card-content>
       </mat-card>
-    </div>
+    </aside>
   </div>
 </div>

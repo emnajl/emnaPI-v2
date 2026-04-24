@@ -1,8 +1,10 @@
 package com.example.reservation.Services;
 
 import com.example.reservation.Entities.Equipment;
+import com.example.reservation.Entities.Enums.ResourceStatus;
 import com.example.reservation.Repository.EquipmentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class EquipmentService {
     private final EquipmentRepository equipmentRepository;
+
+    public record DeleteEquipmentResult(boolean deleted, Equipment equipment, String message) {}
 
     public Equipment createEquipment(Equipment equipment) {
         return equipmentRepository.save(equipment);
@@ -31,20 +35,26 @@ public class EquipmentService {
             equipment.setType(equipmentDetails.getType());
             equipment.setReference(equipmentDetails.getReference());
             equipment.setStatus(equipmentDetails.getStatus());
-            equipment.setSensitive(equipmentDetails.isSensitive()); // Important pour l'update
+            equipment.setSensitive(equipmentDetails.isSensitive());
             return equipmentRepository.save(equipment);
-        }).orElseThrow(() -> new RuntimeException("Équipement non trouvé"));
+        }).orElseThrow(() -> new RuntimeException("Equipment not found"));
     }
 
-    public void deleteEquipment(Long id) {
+    public DeleteEquipmentResult deleteEquipment(Long id) {
+        Equipment equipment = equipmentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Equipment not found"));
+
         try {
-            equipmentRepository.deleteById(id);
-        } catch (org.springframework.dao.DataIntegrityViolationException e) {
-            // Soft delete en cas de conflit de clé étrangère
-            Equipment eq = equipmentRepository.findById(id).orElseThrow();
-            eq.setStatus(com.example.reservation.Entities.Enums.ResourceStatus.UNAVAILABLE);
-            equipmentRepository.save(eq);
-            throw new RuntimeException("L'équipement est lié à des réservations passées. Il a été désactivé (Statut Indisponible) au lieu d'être supprimé.");
+            equipmentRepository.delete(equipment);
+            return new DeleteEquipmentResult(true, null, "Equipment deleted successfully.");
+        } catch (DataIntegrityViolationException e) {
+            equipment.setStatus(ResourceStatus.UNAVAILABLE);
+            Equipment updatedEquipment = equipmentRepository.save(equipment);
+            return new DeleteEquipmentResult(
+                    false,
+                    updatedEquipment,
+                    "This equipment is linked to reservation history, so it was kept and marked as Unavailable."
+            );
         }
     }
 }

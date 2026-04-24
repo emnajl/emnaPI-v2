@@ -7,13 +7,13 @@
     <i-tabler name="building-community" class="icon-22 text-primary m-r-8"></i-tabler>
     <div>
       <div class="header-kicker">EMNA</div>
-      <div class="header-label">Module Gestion Des Ressources</div>
+      <div class="header-label">Resource Management Module</div>
     </div>
   </div>
 
   <span class="flex-1-auto"></span>
 
-  <button class="rounded-pill" mat-mini-fab [matMenuTriggerFor]="profilemenu" aria-label="Profil">
+  <button class="rounded-pill" mat-mini-fab [matMenuTriggerFor]="profilemenu" aria-label="Profile">
     <img src="/assets/images/profile/user-1.jpg" class="rounded-circle object-cover d-block" width="35" />
   </button>
 
@@ -22,11 +22,11 @@
       <mat-icon class="d-flex align-items-center">
         <i-tabler name="shield-check" class="icon-18 d-flex"></i-tabler>
       </mat-icon>
-      Administration EMNA
+      EMNA Administration
     </button>
 
     <div class="p-x-12 m-t-12">
-      <a [routerLink]="['/authentication/login']" mat-stroked-button class="w-100">Déconnexion</a>
+      <a [routerLink]="['/authentication/login']" mat-stroked-button class="w-100">Sign out</a>
     </div>
   </mat-menu>
 </mat-toolbar>

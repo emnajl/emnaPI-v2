@@ -51,20 +51,20 @@ export class AdminRoomsComponent implements OnInit {
     if (this.isEditing && this.editingId) {
       this.api.updateRoom(this.editingId, this.roomForm).subscribe({
         next: () => {
-          this.message = 'Salle modifiée avec succès.';
+          this.message = 'Room updated successfully.';
           this.resetForm();
           this.loadRooms();
         },
-        error: () => this.message = 'Erreur lors de la modification.'
+        error: () => this.message = 'Error while updating the room.'
       });
     } else {
       this.api.createRoom(this.roomForm).subscribe({
         next: () => {
-          this.message = 'Salle créée avec succès.';
+          this.message = 'Room created successfully.';
           this.resetForm();
           this.loadRooms();
         },
-        error: () => this.message = 'Erreur lors de la création.'
+        error: () => this.message = 'Error while creating the room.'
       });
     }
   }
@@ -76,16 +76,19 @@ export class AdminRoomsComponent implements OnInit {
   }
 
   deleteRoom(id: number) {
-    if (confirm("Êtes-vous sûr de vouloir supprimer cette salle ?")) {
+    if (confirm('Are you sure you want to delete this room?')) {
       this.api.deleteRoom(id).subscribe({
-        next: () => this.loadRooms(),
+        next: response => {
+          this.message = response?.message || 'Room deleted successfully.';
+          this.loadRooms();
+        },
         error: err => {
           if (err.error && typeof err.error === 'string') {
-            this.message = 'Erreur: ' + err.error;
+            this.message = 'Error: ' + err.error;
           } else if (err.error && err.error.message) {
-            this.message = 'Erreur: ' + err.error.message;
+            this.message = 'Error: ' + err.error.message;
           } else {
-            this.message = 'Erreur: Impossible de supprimer la salle.';
+            this.message = 'Error: Unable to delete the room.';
           }
         }
       });

@@ -42,8 +42,7 @@ public class EquipmentController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEquipment(@PathVariable Long id) {
-        equipmentService.deleteEquipment(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<EquipmentService.DeleteEquipmentResult> deleteEquipment(@PathVariable Long id) {
+        return ResponseEntity.ok(equipmentService.deleteEquipment(id));
     }
 }

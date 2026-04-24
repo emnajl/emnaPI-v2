@@ -54,6 +54,10 @@ export class ApiService {
     return this.http.post(`${API_URL}/reservations/preview`, payload);
   }
 
+  askReservationAssistant(prompt: string): Observable<any> {
+    return this.http.post(`${API_URL}/ai/reservation-assistant`, { prompt });
+  }
+
   cancelReservation(id: number): Observable<any> {
     return this.http.put(`${API_URL}/reservations/${id}/cancel`, {});
   }
